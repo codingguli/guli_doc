@@ -37,6 +37,8 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/codingguli' }
-    ]
+    ],
+    outlineTitle: '本页内容',
+    outline: [2, 3]
   }
 })
