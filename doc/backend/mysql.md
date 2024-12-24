@@ -8,14 +8,14 @@
 
 [点击这里下载 PDF]( /pdf/mysql.pdf )
 
-<!-- [点击这里下载 sql文件]( /sql/atguigudb.sql ) -->
+<!-- [点击这里下载 sql文件]( /pdf/atguigudb.sql ) -->
 
 **导入表**
 ```bash
 source d:\xxx.sql
 ```
 
-## 第三章：SELECT语句
+## 第三章：最基础的SELECT语句
 
 ### SQL语言的规则和规范
 
@@ -188,5 +188,253 @@ DESCRIBE employees;
 
 ### 过滤数据
 
+- 语法
+
+```sql
+SELECT 列1, 列2, 列3
+FROM 表名
+WHERE 过滤条件
+```
+
+**使用WHERE 子句，将不满足条件的行过滤掉。WHERE子句紧随 FROM子句。**
+
+- 举例
+
+```sql
+SELECT first_name, employee_id, job_id
+FROM employees
+WHERE department_id = 90;
+```
+
+## 第四章：运算符
+
+**DUAL伪表**
+
+### 算数运算符
+
+- +：加法
+- -：减法
+- *：乘法
+- /（DIV）：除法
+- %（MOD）：取模
+
+```sql
+SELECT 100 + 0, 100 - 35.5, 100 * 2, 100 / 2, 100 DIV 2, 
+100 % 3, 100 MOD 3
+FROM DUAL;
+```
+
+>- 一个整数类型的值对整数进行加法和减法操作，结果还是一个整数；
+>- 一个整数类型的值对浮点数进行加法和减法操作，结果是一个浮点数；
+>- 在数学运算中，0不能用作除数，在MySQL中，一个数除以0为NULL。
+
+---
+
+### 比较运算符
+
+- =：等于
+- <=>：安全等于
+- <>（!=）：不等于
+- \>：大于
+- \>=：大于等于
+- <：小于
+- <=：小于等于
+
+1. 等号运算
+
+**比较运算符用来对表达式左边的操作数和右边的操作数进行比较，比较的结果为真则返回1，比较的结果 为假则返回0，其他情况则返回NULL。** 
+
+**如果等号两边的值、字符串或表达式中有一个为NULL，则比较结果为NULL**
+
+```sql
+SELECT 1 = 1, 1 = '1', 1 = 0, 'a' = 'a', 
+(5 + 3) = (2 + 6), '' = NULL , NULL = NULL
+FROM DUAL;
+```
+
+```sql
+SELECT 1 = 2, 0 = 'abc', 1 = 'abc' 
+FROM DUAL;
+```
+
+> - 如果等号两边的值、字符串或表达式都为字符串，则MySQL会按照字符串进行比较，其比较的 是每个字符串中字符的ANSI编码是否相等。 
+> - 如果等号两边的值都是整数，则MySQL会按照整数来比较两个值的大小。 
+> - 如果等号两边的值一个是整数，另一个是字符串，则MySQL会将字符串转化为数字进行比较。 
+> - 如果等号两边的值、字符串或表达式中有一个为NULL，则比较结果为NULL。
+
+---
+
+2. 不等号运算
+
+**不等于运算符（<>和!=）用于判断两边的数字、字符串或者表达式的值是否不相等， 如果不相等则返回1，相等则返回0。不等于运算符不能判断NULL值。如果两边的值有任意一个为NULL， 或两边都为NULL，则结果为NULL。 SQL语句示例如下：**
+
+```sql
+SELECT 1 <> 1, 1 != 2, 'a' != 'b', (3+4) <> (2+6), 'a' != NULL, NULL <> NULL
+FROM DUAL;
+```
+
+**此外，还有非符号类型的运算符：**
+
+<img src="/img/image-20220531154338298.png" alt="image-20220531154418141" />
+
+---
+
+3. 空运算符
+
+**空运算符 (IS NULL 或者 ISNULL) 判断一个值是否为NULL，如果为NULL则返回1，否则返回0。**
+
+```sql
+SELECT NULL IS NULL, ISNULL(NULL), ISNULL('a'), 1 IS NULL
+FROM DUAL;
+```
+
+---
+
+4. 非空运算符
+
+**非空运算符（IS NOT NULL）判断一个值是否不为NULL，如果不为NULL则返回1，否则返回0。**
+
+```sql
+SELECT 'a' IS NOT NULL, NULL IS NOT NULL
+FROM DUAL;
+```
+
+---
+
+5. 最小值运算符
+
+**语法格式为：LEAST(值1，值2，...，值n)。其中，“值n”表示参数列表中有n个值。在有 两个或多个参数的情况下，返回最小值。**
+
+```sql
+SELECT LEAST (1,0,2), LEAST('b','a','c'), LEAST(1,NULL,2)
+FROM DUAL;
+```
+
+---
+
+6. 最大值运算符
+
+**语法格式为：GREATEST(值1，值2，...，值n)。其中，n表示参数列表中有n个值。当有 两个或多个参数时，返回值为最大值。假如任意一个自变量为NULL，则GREATEST()的返回值为NULL。**
+
+```sql
+SELECT GREATEST(1,0,2), GREATEST('b','a','c'), GREATEST(1,NULL,2)
+FROM DUAL;
+```
+
+7. BETWEEN AND运算符
+
+**BETWEEN运算符使用的格式通常为SELECT D FROM TABLE WHERE C BETWEEN A AND B，此时，当C大于或等于A，并且C小于或等于B时，结果为1，否则结果为0。**
+
+```sql
+# 查询每月薪水在8000~10000之间的员工姓名和id
+SELECT salary, employee_id
+FROM employees
+WHERE salary BETWEEN 8000 AND 10000;
+
+# 查询每月薪水不在8000~10000之间的员工姓名和id
+SELECT salary, employee_id
+FROM employees
+WHERE salary NOT BETWEEN 8000 AND 10000;
+```
+
+---
+
+8. IN运算符
+
+**IN运算符用于判断给定的值是否是IN列表中的一个值，如果是则返回1，否则返回0。如果给 定的值为NULL，或者IN列表中存在NULL，则结果为NULL。**
+
+```sql
+# 查询在50号、90号部门的员工姓名和id
+SELECT last_name, employee_id
+FROM employees
+WHERE department_id IN (50, 90);
+
+# 查询不在50号、90号部门的员工姓名和id
+SELECT last_name, employee_id
+FROM employees
+WHERE department_id NOT IN (50, 90);
+```
+
+---
+
+9. LIKE运算符
+
+- %：匹配0个或多个字符
+- _：匹配一个字符
+
+**LIKE运算符主要用来匹配字符串，通常用于模糊匹配，如果满足条件则返回1，否则返回 0。如果给定的值或者匹配条件为NULL，则返回结果为NULL。**
+
+```sql
+# 查询姓名中带有字母'A'的员工姓名和薪水
+SELECT last_name, salary
+FROM employees
+WHERE last_name LIKE '%A%';
+
+# 查询查询姓名中第二个字母'a'的员工姓名和薪水
+SELECT last_name, salary
+FROM employees
+WHERE last_name LIKE '_a%';
+```
+
+10. REGEXP运算符
+
+**REGEXP运算符用来匹配字符串，语法格式为： RLIKE、REGEXP 匹配条件 。**
+
+[正则表达式](https://goregex.cn/)
+
+```sql
+# 查询查询姓名以字母'e'结尾的员工姓名和薪水
+SELECT last_name, salary
+FROM employees
+WHERE last_name REGEXP 'e$';
+```
+
+---
+
+11. ESCAPE（了解即可）
+
+**回避特殊符号的：使用转义符。例如：将[%]转为[$%]、[]转为[$]，然后再加上[ESCAPE‘$’]即可。**
+
+```sql
+SELECT job_id
+FROM jobs
+WHERE job_id LIKE 'IT\_%';
+```
+
+**如果使用\表示转义，要省略ESCAPE。如果不是\，则要加上ESCAPE。**
+
+```sql
+SELECT job_id
+FROM jobs
+WHERE job_id LIKE 'IT$_%' escape '$';
+```
+
+### 逻辑运算符
+
+**逻辑运算符主要用来判断表达式的真假，在MySQL中，逻辑运算符的返回结果为1、0或者NULL。**
+
+**MySQL中支持4种逻辑运算符如下：**
+
+<img src="/img/image-20220531195405333.png" />
+
+### 位运算符
+
+**位运算符是在二进制数上进行计算的运算符。位运算符会先将操作数变成二进制数，然后进行位运算， 最后将计算结果从二进制变回十进制数。**
+
+**MySQL支持的位运算符如下：**
+
+<img src="/img/image-20220531195442995.png" />
+
+### 运算符优先级
+
+**数字编号越大，优先级越高，优先级高的运算符先进行计算。**
+
+<img src="/img/image-20220531195522668.png" />
+
+### 拓展：使用正则表达式查询
+
+**了解**
+
+<img src="/img/image-20220531204253508.png" />
 
 [笔记来源：https://github.com/codinglin/StudyNotes](https://github.com/codinglin/StudyNotes)
