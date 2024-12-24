@@ -6,7 +6,7 @@
 
 ## 第二章：环境搭建
 
-[点击这里下载 PDF]( /pdf/mysql.pdf )
+[点击这里下载 PDF]( /pdf/mysql/mysql.pdf )
 
 <!-- [点击这里下载 sql文件]( /pdf/atguigudb.sql ) -->
 
@@ -275,7 +275,7 @@ FROM DUAL;
 
 **此外，还有非符号类型的运算符：**
 
-<img src="/img/image-20220531154338298.png" alt="image-20220531154418141" />
+<img src="/img/mysql/image-20220531154338298.png" alt="image-20220531154418141" />
 
 ---
 
@@ -415,7 +415,7 @@ WHERE job_id LIKE 'IT$_%' escape '$';
 
 **MySQL中支持4种逻辑运算符如下：**
 
-<img src="/img/image-20220531195405333.png" />
+<img src="/img/mysql/image-20220531195405333.png" />
 
 ### 位运算符
 
@@ -423,18 +423,358 @@ WHERE job_id LIKE 'IT$_%' escape '$';
 
 **MySQL支持的位运算符如下：**
 
-<img src="/img/image-20220531195442995.png" />
+<img src="/img/mysql/image-20220531195442995.png" />
 
 ### 运算符优先级
 
 **数字编号越大，优先级越高，优先级高的运算符先进行计算。**
 
-<img src="/img/image-20220531195522668.png" />
+<img src="/img/mysql/image-20220531195522668.png" />
 
 ### 拓展：使用正则表达式查询
 
 **了解**
 
-<img src="/img/image-20220531204253508.png" />
+<img src="/img/mysql/image-20220531204253508.png" />
+
+## 第五章：排序和分页
+
+### 排序
+
+- 使用 ORDER BY 子句排序
+  - ASC（ascend）: 升序
+  - DESC（descend）:降序
+- ORDER BY 子句在SELECT语句的结尾。
+
+1. 单列排序
+
+```sql
+SELECT last_name, employee_id, department_id, salary
+FROM employees
+ORDER BY department_id DESC;
+```
+
+2. 多列排序
+
+```sql
+SELECT last_name, employee_id, department_id, salary
+FROM employees
+ORDER BY department_id DESC
+```
+
+> - 可以使用不在SELECT列表中的列排序。
+> - 在对多列进行排序的时候，首先排序的第一列必须有相同的列值，才会对第二列进行排序。如果第 一列数据中所有值都是唯一的，将不再对第二列进行排序。
+
+---
+
+### 分页
+
+- 格式
+
+```sql
+SELECT *
+FROM employees
+LIMIT [位置偏移量,] 行数
+```
+
+- 举例
+
+```sql
+# 前10条记录：
+SELECT * FROM 表名 LIMIT 0,10;
+# 或者
+SELECT * FROM 表名 LIMIT 10;
+# 第11至20条记录：
+SELECT * FROM 表名 LIMIT 10,10;
+# 第21至30条记录：
+SELECT * FROM 表名 LIMIT 20,10;
+```
+
+> - MySQL 8.0中可以使用“LIMIT 3 OFFSET 4”，意思是获取从第5条记录开始后面的3条记录，和“LIMIT 4,3;”返回的结果相同。
+
+- 分页显式公式：（当前页数-1）* 每页条数，每页条数
+
+```sql
+SELECT * FROM table
+LIMIT(PageNo - 1) * PageSize, PageSize;
+```
+
+- 注意：LIMIT 子句必须放在整个SELECT语句的最后！
+
+- 使用LIMIT的好处
+
+**约束返回结果的数量可以 减少数据表的网络传输量 ，也可以 提升查询效率 。如果我们知道返回结果只有 1 条，就可以使用 LIMIT 1 ，告诉 SELECT 语句只需要返回一条记录即可。这样的好处就是 SELECT 不需 要扫描完整的表，只需要检索到一条符合条件的记录即可返回。**
+
+## 第六章：多表查询
+
+### 多表查询分类讲解
+
+1. 自连接
+
+```sql
+# 查询employees表，返回 <员工 works for 老板>
+SELECT CONCAT(e1.last_name, ' works for ', e2.last_name) '工作描述'
+FROM employees e1, employees e2
+WHERE e1.manager_id = e2.employee_id;
+```
+
+---
+
+2. 内连接与外连接
+
+- 内连接: 合并具有同一列的两个以上的表的行, 结果集中不包含一个表与另一个表不匹配的行
+
+**sql92语法**
+
+```sql
+# 查询员工所在的部门信息（没有部门的不显示）
+SELECT e.employee_id, e.last_name, d.department_id, d.department_name
+FROM employees e, departments d
+WHERE e.department_id = d.department_id;
+```
+
+---
+
+**sql99语法**
+
+```sql
+# 查询员工所在的部门信息（没有部门的不显示）
+SELECT e.employee_id, e.last_name, d.department_id, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id;
+```
+
+- 外连接: 两个表在连接过程中除了返回满足连接条件的行以外还返回左（或右）表中不满足条件的 行 ，这种连接称为左（或右） 外连接。没有匹配的行时, 结果表中相应的列为空(NULL)。
+- 如果是左外连接，则连接条件中左边的表也称为 主表 ，右边的表称为 从表 。
+
+---
+
+**LEFT OUTER JOIN**
+
+```sql
+# 查询所有员工所在的部门信息
+SELECT e.employee_id, e.last_name, d.department_id, d.department_name
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id;
+```
+
+---
+
+**RIGHT OUTER JOIN**
+
+```sql
+# 查询所有部门的人员信息
+SELECT e.employee_id, e.last_name, d.department_id, d.department_name
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id;
+```
+
+---
+
+### UNION的使用
+
+**合并查询结果**
+
+**利用UNION关键字，可以给出多条SELECT语句，并将它们的结果组合成单个结果集。合并 时，两个表对应的列数和数据类型必须相同，并且相互对应。各个SELECT语句之间使用UNION或UNION ALL关键字分隔。**
+
+**语法格式**
+
+```sql
+SELECT column,... FROM table1
+UNION [ALL]
+SELECT column,... FROM table2
+```
+
+- UNION操作符：UNION 操作符返回两个查询的结果集的并集，去除重复记录。
+- UNION ALL操作符：UNION ALL操作符返回两个查询的结果集的并集。对于两个结果集的重复部分，不去重。
+
+> - 注意：执行UNION ALL语句时所需要的资源比UNION语句少。如果明确知道合并数据后的结果数据不存在重复数据，或者不需要去除重复的数据，则尽量使用UNION ALL语句，以提高数据查询的效率。
+
+```sql
+# 查询部门编号>90或邮箱包含a的员工信息
+
+# 方式一
+SELECT last_name, department_id
+FROM employees
+WHERE department_id > 90 OR email LIKE '%a%';
+
+# 方式二
+SELECT *
+FROM employees
+WHERE email LIKE '%a%'
+UNION
+SELECT *
+FROM employees
+WHERE department_id > 90;
+```
+
+---
+
+### 七种SQL JOINS的实现
+
+**如图所示**
+
+<img src="/img/mysql/image-20220531224324213.png">
+
+```sql
+# 中图（内连接）
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id;
+
+# 左上图（左外连接）
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id;
+
+# 右上图（右外连接）
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id;
+
+
+# 左中图
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id
+WHERE e.department_id IS NULL;
+
+# 右中图
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id
+WHERE e.department_id IS NULL;
+
+# 左下图
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id
+UNION ALL
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id
+WHERE e.department_id IS NULL;
+
+# 右下图
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id
+WHERE e.department_id IS NULL
+UNION ALL
+SELECT e.last_name, e.employee_id, d.department_name, d.department_id
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id
+WHERE e.department_id IS NULL;
+```
+
+---
+
+### SQL99语法新特性
+
+1. 自然连接
+
+**SQL99 在 SQL92 的基础上提供了一些特殊语法，比如 NATURAL JOIN 用来表示自然连接。我们可以把 自然连接理解为 SQL92 中的等值连接。它会帮你自动查询两张连接表中 所有相同的字段 ，然后进行 等值 连接 。**
+
+**在SQL92标准中：**
+
+```sql
+SELECT employee_id,last_name,department_name
+FROM employees e JOIN departments d
+ON e.department_id = d.department_id
+AND e.manager_id = d.manager_id;
+```
+
+**在 SQL99 中你可以写成：**
+
+```sql
+SELECT e.employee_id, e.last_name, d.department_name
+FROM employees e 
+NATURAL JOIN departments d;
+```
+
+2. USING连接
+
+**当我们进行连接的时候，SQL99还支持使用 USING 指定数据表里的 同名字段 进行等值连接。但是只能配 合JOIN一起使用。比如：**
+
+```sql
+SELECT employee_id,last_name,department_name
+FROM employees e JOIN departments d
+USING (department_id);
+```
+
+**你能看出与自然连接 NATURAL JOIN 不同的是，USING 指定了具体的相同的字段名称，你需要在 USING 的括号 () 中填入要指定的同名字段。同时使用 JOIN...USING 可以简化 JOIN ON 的等值连接。它与下 面的 SQL 查询结果是相同的：**
+
+```sql
+SELECT employee_id,last_name,department_name
+FROM employees e ,departments d
+WHERE e.department_id = d.department_id;
+```
+
+---
+
+### 小结
+
+**表连接的约束条件可以有三种方式：WHERE, ON, USING**
+
+- WHERE：适用于所有关联查询
+- ON ：只能和JOIN一起使用，只能写关联条件。虽然关联条件可以并到WHERE中和其他条件一起 写，但分开写可读性更好。
+- USING：只能和JOIN一起使用，而且要求两个关联字段在关联表中名称一致，而且只能表示关联字 段值相等
+
+> - 我们要控制连接表的数量 。
+> - 多表连接就相当于嵌套 for 循环一样，非常消耗资源，会让 SQL 查询性能下 降得很严重，因此不要连接不必要的表。
+> - 在许多 DBMS 中，也都会有最大连接表的限制。
+
+```sql
+# 习题巩固
+# 注意：当两个表外连接之后，组成主表和从表，主表的连接字段是不为空的，
+# 从表的连接字段可能为空，因此从表的关键字段用来判断是否为空。
+
+# 1.查询哪些部门没有员工
+
+# 方式一（外连接）
+SELECT d.department_id
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id
+WHERE e.department_id IS NULL;
+
+# 方式二（子查询）
+SELECT d.department_id
+FROM departments d
+WHERE NOT EXISTS (
+                  SELECT *
+                  FROM employees e
+                  WHERE e.department_id = d.department_id
+)
+
+# 2.查询哪个城市没有部门
+
+# 方式一（外连接）
+SELECT l.city
+FROM departments d
+RIGHT JOIN locations l ON d.location_id = l.location_id
+WHERE d.location_id IS NULL;
+
+# 方式二（子查询）
+SELECT l.city
+FROM locations l
+WHERE NOT EXISTS (
+                  SELECT *
+                  FROM departments d
+                  WHERE l.location_id = d.location_id
+);
+
+# 3.查询部门名为 Sales 或 IT 的员工信息
+SELECT e.last_name, e.employee_id, e.salary, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE d.department_name IN ('Sales', 'IT');
+```
+
+
+## 第七章：单行函数
+
+## 第八章：聚合函数
+
+## 第九章：子查询
 
 [笔记来源：https://github.com/codinglin/StudyNotes](https://github.com/codinglin/StudyNotes)
