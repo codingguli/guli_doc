@@ -5,19 +5,33 @@ export default defineConfig({
   title: "故里的个人博客",
   description: "A VitePress Site",
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
-    ],
-
-    sidebar: [
-      {
-        text: 'Examples',
+      { text: '首页', link: '/' },
+      { 
+        text: '前端',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Html', link: '/frontend/html.md' },
+          { text: 'Css', link: '/frontend/css.md' },
+          { text: 'Javascript', link: '/frontend/javascript.md' },
+          { text: 'Vue', link: '/frontend/vue.md' },
+          { text: 'React', link: '/frontend/react.md' },
         ]
+      },
+      { 
+        text: '后端',
+        items: [
+          { text: 'Nodejs', link: '/backend/node.md' },
+          { text: 'Nestjs', link: '/backend/nest.md' },
+          { text: 'Python', link: '/backend/python.md' },
+          { text: 'Nginx', link: '/backend/nginx.md' },
+          { text: 'Mysql', link: '/backend/mysql.md' },
+        ],
+      },
+      {
+        text: '运维',
+        items: [
+          { text: 'Docker', link: '/devops/docker.md' },
+        ],
       }
     ],
 
