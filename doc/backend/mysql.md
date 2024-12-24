@@ -8,7 +8,7 @@
 
 [点击这里下载 PDF]( /pdf/mysql.pdf )
 
-[点击这里下载 sql文件]( /sql/atguigudb.sql )
+<!-- [点击这里下载 sql文件]( /sql/atguigudb.sql ) -->
 
 **导入表**
 ```bash
