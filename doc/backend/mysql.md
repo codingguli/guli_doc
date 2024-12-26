@@ -915,16 +915,31 @@ JOIN locations l ON d.location_id = l.location_id
 WHERE d.department_name = 'Executive';
 
 # 6.选择指定员工的姓名，员工号，以及他的管理者的姓名和员工号，结果类似于下面的格式
+employees	Emp#	manager	Mgr#
+kochhar		101	king	100
 
+SELECT e1.last_name employees, e1.employee_id "Emp#", 
+e2.last_name manager, e2.employee_id "Mgr#"
+FROM employees e1
+LEFT JOIN employees e2 ON e1.manager_id = e2.employee_id;
 
 # 7.查询哪些部门没有员工
-
+SELECT e.last_name, d.department_id
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+WHERE e.department_id IS NULL;
 
 # 8. 查询哪个城市没有部门 
-
+SELECT city, department_id
+FROM locations l
+LEFT JOIN departments d ON l.location_id = d.department_id
+WHERE d.location_id IS NULL;
 
 # 9. 查询部门名为 Sales 或 IT 的员工信息
-
+SELECT e.last_name, e.employee_id, d.department_name
+FROM departments d
+JOIN employees e ON d.department_id = e.department_id
+WHERE d.department_name IN ('Sales', 'IT');
 ```
 
 ## 第七章：单行函数
@@ -1177,6 +1192,75 @@ WHERE d.department_name = 'Executive';
 | BENCHMARK(n,expr)              | 将表达式expr重复执行n次。用于测试MySQL处理expr表达式所耗费 的时间 |
 | CONVERT(value USING char_code) | 将value所使用的字符编码修改为char_code                       |
 
+### 练习
+
+```sql
+#第07章_单行函数的课后练习
+
+# 1.显示系统时间(注：日期+时间)
+SELECT CONCAT_WS(' ', CURDATE(), CURTIME()), 
+CONCAT_WS(' ', CURRENT_DATE(), CURRENT_TIME()), 
+NOW(), SYSDATE(), CURRENT_TIMESTAMP(), LOCALTIME(), LOCALTIMESTAMP()
+FROM DUAL;
+
+# 2.查询员工号，姓名，工资，以及工资提高百分之20%后的结果（new salary）
+SELECT employee_id, last_name, salary, salary * 1.2 "new salary"
+FROM employees;
+
+# 3.将员工的姓名按首字母排序，并写出姓名的长度（length）
+SELECT last_name, CHAR_LENGTH(last_name) `length`
+FROM employees
+ORDER BY LEFT(last_name, 1) ASC;
+
+# 4.查询员工id,last_name,salary，并作为一个列输出，别名为OUT_PUT
+SELECT CONCAT_WS(' ', employee_id, last_name, salary) OUT_PUT
+FROM employees;
+
+# 5.查询公司各员工工作的年数、工作的天数，并按工作年数的降序排序
+SELECT employee_id, TRUNCATE(DATEDIFF(NOW(), hire_date) / 365, 1) "work_years", 
+DATEDIFF(NOW(), hire_date) "work_days"
+FROM employees
+ORDER BY work_years DESC;
+
+# 6.查询员工姓名，hire_date , department_id，满足以下条件：
+#雇用时间在1997年之后，department_id 为80 或 90 或110, commission_pct不为空
+SELECT last_name, hire_date, department_id
+FROM employees
+WHERE YEAR(hire_date) >= 1997
+AND department_id IN (80, 90, 110)
+AND commission_pct IS NOT NULL;
+
+# 7.查询公司中入职超过10000天的员工姓名、入职时间
+SELECT last_name, hire_date
+FROM employees
+WHERE DATEDIFF(NOW(),hire_date) > 10000;
+
+# 8.做一个查询，产生下面的结果
+#<last_name> earns <salary> monthly but wants <salary*3> 
+SELECT 
+CONCAT_WS(' ',last_name, 'earns', salary, 'monthly', 'but', 'wants', salary * 3) '梦想'
+FROM employees;
+
+# 9.使用case-when，按照下面的条件：
+/*job                  grade
+AD_PRES              	A
+ST_MAN               	B
+IT_PROG              	C
+SA_REP               	D
+ST_CLERK             	E
+
+产生下面的结果:
+*/
+SELECT employee_id, CASE job_id
+                    WHEN "AD_PRES" THEN "A"
+                    WHEN "ST_MAN" THEN "B"
+                    WHEN "IT_PROG" THEN "C"
+                    WHEN "SA_REP" THEN "D"
+                    WHEN "ST_CLERK" THEN "E"
+                    END
+FROM employees;
+```
+
 ## 第八章：聚合函数
 
 ### 聚合函数介绍
@@ -1388,6 +1472,55 @@ LIMIT 2 # 顺序 7
 - 当然我们在写 SELECT 语句的时候，不一定存在所有的关键字，相应的阶段就会省略。
 
 **同时因为 SQL 是一门类似英语的结构化查询语言，所以我们在写 SELECT 语句的时候，还要注意相应的 关键字顺序，所谓底层运行的原理，就是我们刚才讲到的执行顺序。**
+
+### 练习
+
+```sql
+
+# 第08章_聚合函数的课后练习
+
+#1.where子句可否使用组函数进行过滤?
+不可以!!!
+
+#2.查询公司员工工资的最大值，最小值，平均值，总和
+SELECT MAX(salary), MIN(salary), AVG(salary), SUM(salary)
+FROM employees;
+
+#3.查询各job_id的员工工资的最大值，最小值，平均值，总和
+SELECT job_id, MAX(salary), MIN(salary), AVG(salary), SUM(salary)
+FROM employees
+GROUP BY job_id;
+
+#4.选择具有各个job_id的员工人数
+SELECT job_id, COUNT(*) 'count'
+FROM employees
+GROUP BY job_id;
+
+# 5.查询员工最高工资和最低工资的差距（DIFFERENCE）
+SELECT MAX(salary) - MIN(salary) DIFFERENCE
+FROM employees;
+
+# 6.查询各个管理者手下员工的最低工资，其中最低工资不能低于6000，没有管理者的员工不计算在内
+SELECT MIN(salary), manager_id
+FROM employees
+WHERE manager_id IS NOT NULL
+GROUP BY manager_id
+HAVING MIN(salary) > 6000;
+
+# 7.查询所有部门的名字，location_id，员工数量和平均工资，并按平均工资降序 （**）
+SELECT d.department_name, d.location_id, COUNT(e.employee_id), AVG(e.salary)
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+GROUP BY department_name, location_id
+ORDER BY AVG(e.salary) DESC;
+# 在列中出现的字段（非聚合函数），在分组中都需要出现
+
+# 8.查询每个工种、每个部门的部门名、工种名和最低工资 
+SELECT d.department_name, e.job_id, MIN(e.salary)
+FROM employees e
+JOIN departments d ON d.department_id = e.department_id
+GROUP BY job_id, department_name;
+```
 
 ## 第九章：子查询
 
