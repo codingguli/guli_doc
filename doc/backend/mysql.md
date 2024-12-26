@@ -1584,35 +1584,353 @@ GROUP BY job_id, department_name;
 2. 代码示例
 
 ```sql
-# 返回job_id与141号员工相同，salary比143号员工多的员工姓名，job_id和工资
+# 1.返回job_id与141号员工相同，salary比143号员工多的员工姓名，job_id和工资
+SELECT job_id, salary
+FROM employees
+WHERE job_id = (
+                SELECT job_id
+                FROM employees
+                WHERE employee_id = 141
+)
+AND
+salary > (
+          SELECT salary
+          FROM employees
+          WHERE employee_id = 143
+);
+
+# 2.查询与141号或174号员工的manager_id和department_id相同的其他员工的employee_id， manager_id，department_id
+SELECT employee_id, manager_id, department_id
+FROM employees
+WHERE (manager_id, department_id) IN (
+                      SELECT manager_id, department_id
+                      FROM employees
+                      WHERE employee_id IN (141, 174)
+)AND employee_id NOT IN (141, 174);
+
+# 3.查询最低工资大于50号部门最低工资的部门id和其最低工资
+SELECT department_id, MIN(salary)
+FROM employees
+GROUP BY department_id
+HAVING MIN(salary) > (
+                      SELECT MIN(salary)
+                      FROM employees
+                      WHERE department_id = 50
+);
 ```
 
 3. CASE中的子查询
 
+```sql
+# 显式员工的employee_id,last_name和location。其中，若员工department_id与location_id为1800 的department_id相同，则location为’Canada’，其余则为’USA’。
+SELECT employee_id, last_name, (
+                                CASE department_id
+                                WHEN (
+                                      SELECT department_id
+                                      FROM departments
+                                      WHERE location_id = 1800
+                                ) THEN 'Canada'
+                                ELSE 'USA'
+                                END
+) location
+FROM employees;
+```
+
 4. 子查询中的空值问题
 
+```sql
+SELECT last_name, job_id
+FROM employees
+WHERE job_id = (
+                SELECT job_id
+                FROM employees
+                WHERE last_name = 'Haas'
+);
+```
+> - 子查询不返回任何行
+
 5. 非法使用子查询
+
+```sql
+SELECT employee_id, last_name
+FROM employees
+WHERE salary = (
+                SELECT MIN(salary)
+                FROM employees
+                GROUP BY department_id
+);
+```
+> - 多行子查询使用单行比较符
 
 ---
 
 ### 多行子查询
 
+- 也称为集合比较子查询
+- 内查询返回多行
+- 使用多行比较操作符
+
 1. 多行比较操作符
+
+| 操作符 | 含义 |
+| ----- | --- |
+| IN | 等于列表中的任意一个 |
+| ANY | 需要和单行比较操作符一起使用，和子查询返回的某一个值比较 |
+| ALL | 需要和单行比较符一起使用，和子查询返回的所有值比较 |
+| SOME | 实际上是ANY的别名，作用相同，一般常使用ANY |
 
 2. 代码示例
 
+```sql
+# 1.返回其它job_id中比job_id为‘IT_PROG’部门任一工资低的员工的员工号、姓名、job_id 以及salary（**）
+SELECT employee_id, last_name, job_id, salary
+FROM employees
+WHERE job_id <> 'IT_PROG'
+AND salary < ANY (
+                  SELECT salary
+                  FROM employees
+                  WHERE job_id = 'IT_PROG'
+);
+
+# 2.查询平均工资最低的部门id
+# 方式1
+SELECT department_id, AVG(salary)
+FROM employees
+GROUP BY department_id
+HAVING AVG(salary) = (
+                      SELECT MIN(avg_salary)
+                      FROM (
+                            SELECT AVG(salary) 'avg_salary'
+                            FROM employees
+                            GROUP BY department_id
+                      ) avg_salary_dep
+);
+
+# 方式2
+SELECT department_id, AVG(salary)
+FROM employees
+GROUP BY department_id
+HAVING AVG(salary) <= ALL (
+                          SELECT AVG(salary)
+                          FROM employees
+                          GROUP BY department_id
+);
+```
+
 3. 空值问题
+
+```sql
+SELECT last_name
+FROM employees
+WHERE employee_id NOT IN (
+                          SELECT manager_id
+                          FROM employees
+                          WHERE manager_id IS NOT NULL
+);
+```
 
 ---
 
 ### 相关子查询
 
+**如果子查询的执行依赖于外部查询，通常情况下都是因为子查询中的表用到了外部的表，并进行了条件 关联，因此每执行一次外部查询，子查询都要重新计算一次，这样的子查询就称之为 关联子查询 。**
+
+**相关子查询按照一行接一行的顺序执行，主查询的每一行都执行一次子查询。**
+
+<img src="/img/mysql/image-20220603154919387.png" />
+
+---
+
+<img src="/img/mysql/image-20220603155013864.png">
+
+> - 说明：子查询中使用主查询中的列
+
+---
+
 1. 代码示例
+
+```sql
+# 查询员工中工资大于本部门平均工资的员工的last_name,salary和其department_id
+SELECT last_name, salary, department_id
+FROM employees e1
+WHERE salary > (
+                SELECT AVG(salary)
+                FROM employees e2
+                WHERE e1.department_id = e2.department_id
+);
+```
+
+**在ORDER BY 中使用子查询：**
+
+```sql
+# 1.查询员工的id,salary,按照department_name 排序
+SELECT employee_id, salary
+FROM employees e
+ORDER BY (
+          SELECT department_name
+          FROM departments d
+          WHERE e.department_id = d.department_id
+) ASC;
+
+# 2.若employees表中employee_id与job_history表中employee_id相同的数目不小于2，输出这些相同 id的员工的employee_id,last_name和其job_id
+SELECT employee_id, last_name, job_id
+FROM employees e
+WHERE 2 <= (
+            SELECT COUNT(j.employee_id)
+            FROM job_history j
+            WHERE j.employee_id = e.employee_id
+);
+```
 
 2. EXISTS与NOT EXISTS关键字
 
+- 关联子查询通常也会和 EXISTS操作符一起来使用，用来检查在子查询中是否存在满足条件的行。
+- 如果在子查询中不存在满足条件的行：
+  - 条件返回 FALSE
+  - 继续在子查询中查找
+- 如果在子查询中存在满足条件的行：
+  - 不在子查询中继续查找
+  - 条件返回 TRUE
+- NOT EXISTS关键字表示如果不存在某种条件，则返回TRUE，否则返回FALSE。
+
+```sql
+# 查询公司管理者的employee_id，last_name，job_id，department_id信息
+SELECT employee_id, last_name, job_id, department_id
+FROM employees e1
+WHERE EXISTS (
+              SELECT *
+              FROM employees e2
+              WHERE e1.employee_id = e2.manager_id
+);
+
+# 查询departments表中，不存在于employees表中的部门的department_id和department_name
+SELECT d.department_id, d.department_name
+FROM departments d
+WHERE NOT EXISTS (
+                  SELECT *
+                  FROM employees e
+                  WHERE e.department_id = d.department_id
+);
+```
+
 3. 相关更新
 
+```sql
+UPDATE table1 alias1
+SET column = (
+              SELECT expression
+              FROM table2 alias2
+              WHERE alias1.column = alias2.column
+);
+```
+**使用相关子查询依据一个表中的数据更新另一个表的数据。**
+
+```sql
+# 在employees中增加一个department_name字段，数据为员工对应的部门名称
+# 1）
+ALTER TABLE employees
+ADD(department_name VARCHAR2(14));
+
+# 2）
+UPDATE employees e
+SET department_name = (SELECT department_name
+FROM departments d
+WHERE e.department_id = d.department_id);
+```
+
 4. 相关删除
+
+```sql
+DELETE FROM table1 alias1
+WHERE column operator (
+                      SELECT expression
+                      FROM table2 alias2
+                      WHERE alias1.column = alias2.column
+);
+```
+
+**使用相关子查询依据一个表中的数据删除另一个表的数据。**
+
+```sql
+# 删除表employees中，其与emp_history表皆有的数据
+DELETE FROM employees e
+WHERE employee_id in (
+                      SELECT employee_id
+                      FROM emp_history
+                      WHERE employee_id = e.employee_id
+);
+```
+
+---
+
+### 思考题
+
+```sql
+# 谁的工资比Abel的高？
+#方式1：自连接
+SELECT e2.last_name,e2.salary
+FROM employees e1,employees e2
+WHERE e1.last_name = 'Abel'
+AND e1.`salary` < e2.`salary`;
+
+#方式2：子查询
+SELECT last_name,salary
+FROM employees
+WHERE salary > (
+                SELECT salary
+                FROM employees
+                WHERE last_name = 'Abel'
+);
+
+**问题：以上两种方式有好坏之分吗？**
+- 解答：自连接方式好！
+- 题目中可以使用子查询，也可以使用自连接。一般情况建议你使用自连接，因为在许多 DBMS 的处理过 程中，对于自连接的处理速度要比子查询快得多。 可以这样理解：子查询实际上是通过未知表进行查询后的条件判断，而自连接是通过已知的自身数据表 进行条件判断，因此在大部分 DBMS 中都对自连接处理进行了优化。
+```
+
+---
+
+### 练习
+
+```sql
+# 1.查询和Zlotkey相同部门的员工姓名和工资
+
+# 2.查询工资比公司平均工资高的员工的员工号，姓名和工资。
+
+# 3.选择工资大于所有JOB_ID = 'SA_MAN' 的员工的工资的员工的last_name, job_id, salary
+
+# 4.查询和姓名中包含字母u的员工在相同部门的员工的员工号和姓名
+
+# 5.查询在部门的location_id为1700的部门工作的员工的员工号
+
+# 6.查询管理者是King的员工姓名和工资
+
+# 7.查询工资最低的员工信息 (last_name, salary)
+
+# 8.查询平均工资最低的部门信息
+
+# 9.查询平均工资最低的部门信息和该部门的平均工资 (相关子查询)
+
+# 10.查询平均工资最高的job信息
+
+# 11.查询平均工资高于公司平均工资的部门有哪些？
+
+# 12.查询出公司中所有manager的详细信息
+
+# 13.各个部门中，最高工资中最低的那个部门的最低工资是多少？
+
+# 14.查询平均工资最高的部门的manager的详细信息：last_name, department_id, email, salary
+
+# 15.查询部门的部门号，其中不包括job_id是"ST_CLERK"的部门号
+
+# 16.选择所有没有管理者的员工的last_name
+
+# 17.查询员工号、姓名、雇用时间、工资，其中员工的管理者为 ‘De Haan‘
+
+# 18.查询各部门中工资比本部门平均工资高的员工的员工号，姓名和工资（相关子查询）
+
+# 19.查询每个部门下的部门人数大于5的部门名称（相关子查询）
+
+# 20.查询每个国家下的部门个数大于2的国家编号（相关子查询）
+```
 
 [笔记来源：https://github.com/codinglin/StudyNotes](https://github.com/codinglin/StudyNotes)
