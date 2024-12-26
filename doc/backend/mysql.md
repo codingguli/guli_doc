@@ -1822,7 +1822,7 @@ WHERE NOT EXISTS (
 );
 ```
 
-3. 相关更新
+3. 相关更新（了解）
 
 ```sql
 UPDATE table1 alias1
@@ -1843,12 +1843,14 @@ ADD(department_name VARCHAR2(14));
 
 # 2）
 UPDATE employees e
-SET department_name = (SELECT department_name
-FROM departments d
-WHERE e.department_id = d.department_id);
+SET department_name = (
+                      SELECT department_name
+                      FROM departments d
+                      WHERE e.department_id = d.department_id
+);
 ```
 
-4. 相关删除
+4. 相关删除（了解）
 
 ```sql
 DELETE FROM table1 alias1
@@ -1878,13 +1880,13 @@ WHERE employee_id in (
 ```sql
 # 谁的工资比Abel的高？
 #方式1：自连接
-SELECT e2.last_name,e2.salary
-FROM employees e1,employees e2
-WHERE e1.last_name = 'Abel'
-AND e1.`salary` < e2.`salary`;
+SELECT e1.last_name, e1.salary
+FROM employees e1
+JOIN employees e2 ON e1.salary > e2.salary
+WHERE e2.last_name = 'Abel';
 
 #方式2：子查询
-SELECT last_name,salary
+SELECT last_name, salary
 FROM employees
 WHERE salary > (
                 SELECT salary
@@ -1903,23 +1905,85 @@ WHERE salary > (
 ### 练习
 
 ```sql
+# 第09章_子查询的课后练习
+
 # 1.查询和Zlotkey相同部门的员工姓名和工资
+SELECT last_name, salary
+FROM employees
+WHERE department_id = (
+                        SELECT department_id
+                        FROM employees
+                        WHERE last_name = 'Zlotkey'
+);
 
 # 2.查询工资比公司平均工资高的员工的员工号，姓名和工资。
+SELECT employee_id, last_name, salary
+FROM employees
+WHERE salary > (
+                SELECT AVG(salary)
+                FROM employees
+);
 
 # 3.选择工资大于所有JOB_ID = 'SA_MAN' 的员工的工资的员工的last_name, job_id, salary
+SELECT last_name, job_id, salary
+FROM employees
+WHERE salary > ALL (
+                    SELECT salary
+                    FROM employees
+                    WHERE job_id = 'SA_MAN'
+);
 
 # 4.查询和姓名中包含字母u的员工在相同部门的员工的员工号和姓名
+SELECT employee_id, last_name
+FROM employees
+WHERE department_id IN (
+                        SELECT department_id
+                        FROM employees
+                        WHERE last_name LIKE '%u%'
+);
 
 # 5.查询在部门的location_id为1700的部门工作的员工的员工号
+SELECT employee_id
+FROM employees
+WHERE department_id IN (
+                        SELECT department_id
+                        FROM departments
+                        WHERE location_id = 1700
+);
 
 # 6.查询管理者是King的员工姓名和工资
+SELECT last_name, salary
+FROM employees
+WHERE manager_id IN (
+                      SELECT manager_id
+                      FROM employees
+                      WHERE last_name = 'King'
+);
 
 # 7.查询工资最低的员工信息 (last_name, salary)
+SELECT last_name, salary, employee_id
+FROM employees
+WHERE salary = (
+                SELECT MIN(salary)
+                FROM employees
+);
 
 # 8.查询平均工资最低的部门信息
+SELECT AVG(salary), d.department_id, d.department_name, d.location_id
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+GROUP BY department_id, department_name
+HAVING AVG(salary) = (
+                      SELECT MIN(avg_salary)
+                      FROM (
+                            SELECT AVG(salary) avg_salary
+                            FROM employees
+                            GROUP BY department_id
+                      ) avg_salary_dep
+);
 
 # 9.查询平均工资最低的部门信息和该部门的平均工资 (相关子查询)
+
 
 # 10.查询平均工资最高的job信息
 
