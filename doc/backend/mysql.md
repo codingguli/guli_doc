@@ -6,18 +6,19 @@
 
 ## 第二章：环境搭建
 
-[点击这里下载 PDF]( /pdf/mysql/mysql.pdf )
+[点击这里下载 PDF](/pdf/mysql/mysql.pdf)
 
 <!-- [点击这里下载 sql文件]( /sql/atguigudb.sql ) -->
 
 **导入表**
+
 ```bash
 source d:\xxx.sql
 ```
 
-## 第三章：最基础的SELECT语句
+## 第三章：最基础的 SELECT 语句
 
-### SQL语言的规则和规范
+### SQL 语言的规则和规范
 
 1. 基本规则
 
@@ -25,23 +26,23 @@ source d:\xxx.sql
 - 每条命令以 ; 或 \g 或 \G 结束
 - 关键字不能被缩写也不能分行
 - 关于标点符号
-  - 必须保证所有的()、单引号、双引号是成对结束的 
-  - 必须使用英文状态下的半角输入方式 
-  - 字符串型和日期时间类型的数据可以使用单引号（' '）表示 
-  - 列的别名，尽量使用双引号（" "），而且不建议省略as
+  - 必须保证所有的()、单引号、双引号是成对结束的
+  - 必须使用英文状态下的半角输入方式
+  - 字符串型和日期时间类型的数据可以使用单引号（' '）表示
+  - 列的别名，尽量使用双引号（" "），而且不建议省略 as
 
 ---
 
-2. SQL大小写规范（建议遵守）
+2. SQL 大小写规范（建议遵守）
 
-- MySQL 在 Windows 环境下是大小写不敏感的 
-- MySQL 在 Linux 环境下是大小写敏感的 
-  - 数据库名、表名、表的别名、变量名是严格区分大小写的 
-  - 关键字、函数名、列名(或字段名)、列的别名(字段的别名) 是忽略大小写的。 
-- 推荐采用统一的书写规范： 
-  - 数据库名、表名、表别名、字段名、字段别名等都小写 
+- MySQL 在 Windows 环境下是大小写不敏感的
+- MySQL 在 Linux 环境下是大小写敏感的
+  - 数据库名、表名、表的别名、变量名是严格区分大小写的
+  - 关键字、函数名、列名(或字段名)、列的别名(字段的别名) 是忽略大小写的。
+- 推荐采用统一的书写规范：
+  - 数据库名、表名、表别名、字段名、字段别名等都小写
   - SQL 关键字、函数名、绑定变量等都大写
-  
+
 ---
 
 3. 注释
@@ -51,19 +52,20 @@ source d:\xxx.sql
 单行注释：-- 注释文字(--后面必须包含一个空格。)
 多行注释：/* 注释文字 */
 ```
+
 ---
 
 4. 命名规则
 
-- 数据库、表名不得超过30个字符，变量名限制为29个 
-- 必须只能包含 A–Z, a–z, 0–9, _共63个字符 
-- 数据库名、表名、字段名等对象名中间不要包含空格 同一个MySQL软件中，数据库不能同名；同一个库中，表不能重名；
-- 同一个表中，字段不能重名 必须保证你的字段没有和保留字、数据库系统或常用方法冲突。如果坚持使用，请在SQL语句中使 用`（着重号）引起来 
+- 数据库、表名不得超过 30 个字符，变量名限制为 29 个
+- 必须只能包含 A–Z, a–z, 0–9, \_共 63 个字符
+- 数据库名、表名、字段名等对象名中间不要包含空格 同一个 MySQL 软件中，数据库不能同名；同一个库中，表不能重名；
+- 同一个表中，字段不能重名 必须保证你的字段没有和保留字、数据库系统或常用方法冲突。如果坚持使用，请在 SQL 语句中使 用`（着重号）引起来
 - 保持字段名和类型的一致性，在命名字段并为其指定数据类型的时候一定要保证一致性。假如数据 类型在一个表里是整数，那在另一个表里可就别变成字符型了
 
 ---
 
-### 基本的SELECT语句
+### 基本的 SELECT 语句
 
 1. SELECT ... FROM ...
 
@@ -84,7 +86,7 @@ FROM employees;
 - 选择特定的列
 
 ```sql
-SELECT first_name, last_name, employee_id 
+SELECT first_name, last_name, employee_id
 FROM employees;
 ```
 
@@ -97,7 +99,7 @@ SELECT first_name f_n
 FROM employees;
 ```
 
-- 方式二（AS关键字）
+- 方式二（AS 关键字）
 
 ```sql
 SELECT first_name AS f_n
@@ -122,12 +124,12 @@ FROM departments;
 
 4. 空值参与运算
 
-**空值：null ( 不等同于0, ’ ‘, ’null‘ )**
+**空值：null ( 不等同于 0, ’ ‘, ’null‘ )**
 
-**实际问题的解决方案：引入IFNULL**
+**实际问题的解决方案：引入 IFNULL**
 
 ```sql
-SELECT employee_id, salary AS "月工资", 
+SELECT employee_id, salary AS "月工资",
 (1 + IFNULL(commission_pct,0)) * salary * 12 AS "年工资"
 FROM employees;
 ```
@@ -136,7 +138,7 @@ FROM employees;
 
 **必须保证你的字段没有和保留字、数据库系统或常见方法冲突。**
 
-**如果坚持使用，在SQL语句中使用 `` 引起来。**
+**如果坚持使用，在 SQL 语句中使用 `` 引起来。**
 
 ```sql
 SELECT *
@@ -160,31 +162,31 @@ DESC employees;
 DESCRIBE employees;
 ```
 
-| Field          | Type         | Null | Key | Default | Extra |
-| :------------: | :----------: | :--: | :-: | :-----: | :---: |
-| employee_id    | int(6)       | NO   | PRI | 0       |       |
-| first_name     | varchar(20)  | YES  |     | NULL    |       |
-| last_name      | varchar(25)  | NO   |     | NULL    |       |
-| email          | varchar(25)  | NO   | UNI | NULL    |       |
-| phone_number   | varchar(20)  | YES  |     | NULL    |       |
-| hire_date      | date         | NO   |     | NULL    |       |
-| job_id         | varchar(10)  | NO   | MUL | NULL    |       |
-| salary         | double(8,2)  | YES  |     | NULL    |       |
-| commission_pct | double(2,2)  | YES  |     | NULL    |       |
-| manager_id     | int(6)       | YES  | MUL | NULL    |       |
-| department_id  | int(4)       | YES  | MUL | NULL    |       |
+|     Field      |    Type     | Null | Key | Default | Extra |
+| :------------: | :---------: | :--: | :-: | :-----: | :---: |
+|  employee_id   |   int(6)    |  NO  | PRI |    0    |       |
+|   first_name   | varchar(20) | YES  |     |  NULL   |       |
+|   last_name    | varchar(25) |  NO  |     |  NULL   |       |
+|     email      | varchar(25) |  NO  | UNI |  NULL   |       |
+|  phone_number  | varchar(20) | YES  |     |  NULL   |       |
+|   hire_date    |    date     |  NO  |     |  NULL   |       |
+|     job_id     | varchar(10) |  NO  | MUL |  NULL   |       |
+|     salary     | double(8,2) | YES  |     |  NULL   |       |
+| commission_pct | double(2,2) | YES  |     |  NULL   |       |
+|   manager_id   |   int(6)    | YES  | MUL |  NULL   |       |
+| department_id  |   int(4)    | YES  | MUL |  NULL   |       |
 
-**其中，各个字段的含义分别解释如下：** 
+**其中，各个字段的含义分别解释如下：**
 
-- Field：表示字段名称。 
-- Type：表示字段类型，这里 barcode、goodsname 是文本型的，price 是整数类型的。 
-- Null：表示该列是否可以存储NULL值。 
+- Field：表示字段名称。
+- Type：表示字段类型，这里 barcode、goodsname 是文本型的，price 是整数类型的。
+- Null：表示该列是否可以存储 NULL 值。
 - Key：表示该列是否已编制索引。
-- PRI表示该列是表主键的一部分；
-- UNI表示该列是UNIQUE索引的一 部分；
-- MUL表示在列中某个给定值允许出现多次。 
-- Default：表示该列是否有默认值，如果有，那么值是多少。 
-- Extra：表示可以获取的与给定列有关的附加信息，例如AUTO_INCREMENT等。
+- PRI 表示该列是表主键的一部分；
+- UNI 表示该列是 UNIQUE 索引的一 部分；
+- MUL 表示在列中某个给定值允许出现多次。
+- Default：表示该列是否有默认值，如果有，那么值是多少。
+- Extra：表示可以获取的与给定列有关的附加信息，例如 AUTO_INCREMENT 等。
 
 ### 过滤数据
 
@@ -196,7 +198,7 @@ FROM 表名
 WHERE 过滤条件
 ```
 
-**使用WHERE 子句，将不满足条件的行过滤掉。WHERE子句紧随 FROM子句。**
+**使用 WHERE 子句，将不满足条件的行过滤掉。WHERE 子句紧随 FROM 子句。**
 
 - 举例
 
@@ -229,7 +231,7 @@ SELECT first_name, department_id
 FROM employees
 WHERE employee_id = 176;
 
-# 5.显示表 departments 的结构，并查询其中的全部数据 
+# 5.显示表 departments 的结构，并查询其中的全部数据
 DESC departments;
 
 SELECT *
@@ -238,69 +240,69 @@ FROM departments;
 
 ## 第四章：运算符
 
-**DUAL伪表**
+**DUAL 伪表**
 
 ### 算数运算符
 
-| 操作符 | 含义 |
-| ----- | --- |
-| + | 加法 | 
-| - | 减法 |
-| * | 乘法 |
+| 操作符   | 含义 |
+| -------- | ---- |
+| +        | 加法 |
+| -        | 减法 |
+| \*       | 乘法 |
 | /（DIV） | 除法 |
 | %（MOD） | 取模 |
 
 ```sql
-SELECT 100 + 0, 100 - 35.5, 100 * 2, 100 / 2, 100 DIV 2, 
+SELECT 100 + 0, 100 - 35.5, 100 * 2, 100 / 2, 100 DIV 2,
 100 % 3, 100 MOD 3
 FROM DUAL;
 ```
 
->- 一个整数类型的值对整数进行加法和减法操作，结果还是一个整数；
->- 一个整数类型的值对浮点数进行加法和减法操作，结果是一个浮点数；
->- 在数学运算中，0不能用作除数，在MySQL中，一个数除以0为NULL。
+> - 一个整数类型的值对整数进行加法和减法操作，结果还是一个整数；
+> - 一个整数类型的值对浮点数进行加法和减法操作，结果是一个浮点数；
+> - 在数学运算中，0 不能用作除数，在 MySQL 中，一个数除以 0 为 NULL。
 
 ---
 
 ### 比较运算符
 
-| 操作符 | 含义 |
-| ----- | --- |
-| = | 等于 | 
-| <=> | 安全等于 |
-| > | 大于 |
-| >= | 大于等于 |
-| < | 小于 |
-| <= | 小于等于 |
-| <> | 不等于 |
+| 操作符 | 含义     |
+| ------ | -------- |
+| =      | 等于     |
+| <=>    | 安全等于 |
+| >      | 大于     |
+| >=     | 大于等于 |
+| <      | 小于     |
+| <=     | 小于等于 |
+| <>     | 不等于   |
 
 1. 等号运算
 
-**比较运算符用来对表达式左边的操作数和右边的操作数进行比较，比较的结果为真则返回1，比较的结果 为假则返回0，其他情况则返回NULL。** 
+**比较运算符用来对表达式左边的操作数和右边的操作数进行比较，比较的结果为真则返回 1，比较的结果 为假则返回 0，其他情况则返回 NULL。**
 
-**如果等号两边的值、字符串或表达式中有一个为NULL，则比较结果为NULL**
+**如果等号两边的值、字符串或表达式中有一个为 NULL，则比较结果为 NULL**
 
 ```sql
-SELECT 1 = 1, 1 = '1', 1 = 0, 'a' = 'a', 
+SELECT 1 = 1, 1 = '1', 1 = 0, 'a' = 'a',
 (5 + 3) = (2 + 6), '' = NULL , NULL = NULL
 FROM DUAL;
 ```
 
 ```sql
-SELECT 1 = 2, 0 = 'abc', 1 = 'abc' 
+SELECT 1 = 2, 0 = 'abc', 1 = 'abc'
 FROM DUAL;
 ```
 
-> - 如果等号两边的值、字符串或表达式都为字符串，则MySQL会按照字符串进行比较，其比较的 是每个字符串中字符的ANSI编码是否相等。 
-> - 如果等号两边的值都是整数，则MySQL会按照整数来比较两个值的大小。 
-> - 如果等号两边的值一个是整数，另一个是字符串，则MySQL会将字符串转化为数字进行比较。 
-> - 如果等号两边的值、字符串或表达式中有一个为NULL，则比较结果为NULL。
+> - 如果等号两边的值、字符串或表达式都为字符串，则 MySQL 会按照字符串进行比较，其比较的 是每个字符串中字符的 ANSI 编码是否相等。
+> - 如果等号两边的值都是整数，则 MySQL 会按照整数来比较两个值的大小。
+> - 如果等号两边的值一个是整数，另一个是字符串，则 MySQL 会将字符串转化为数字进行比较。
+> - 如果等号两边的值、字符串或表达式中有一个为 NULL，则比较结果为 NULL。
 
 ---
 
 2. 不等号运算
 
-**不等于运算符（<>和!=）用于判断两边的数字、字符串或者表达式的值是否不相等， 如果不相等则返回1，相等则返回0。不等于运算符不能判断NULL值。如果两边的值有任意一个为NULL， 或两边都为NULL，则结果为NULL。 SQL语句示例如下：**
+**不等于运算符（<>和!=）用于判断两边的数字、字符串或者表达式的值是否不相等， 如果不相等则返回 1，相等则返回 0。不等于运算符不能判断 NULL 值。如果两边的值有任意一个为 NULL， 或两边都为 NULL，则结果为 NULL。 SQL 语句示例如下：**
 
 ```sql
 SELECT 1 <> 1, 1 != 2, 'a' != 'b', (3+4) <> (2+6), 'a' != NULL, NULL <> NULL
@@ -315,7 +317,7 @@ FROM DUAL;
 
 3. 空运算符
 
-**空运算符 (IS NULL 或者 ISNULL) 判断一个值是否为NULL，如果为NULL则返回1，否则返回0。**
+**空运算符 (IS NULL 或者 ISNULL) 判断一个值是否为 NULL，如果为 NULL 则返回 1，否则返回 0。**
 
 ```sql
 SELECT NULL IS NULL, ISNULL(NULL), ISNULL('a'), 1 IS NULL
@@ -326,7 +328,7 @@ FROM DUAL;
 
 4. 非空运算符
 
-**非空运算符（IS NOT NULL）判断一个值是否不为NULL，如果不为NULL则返回1，否则返回0。**
+**非空运算符（IS NOT NULL）判断一个值是否不为 NULL，如果不为 NULL 则返回 1，否则返回 0。**
 
 ```sql
 SELECT 'a' IS NOT NULL, NULL IS NOT NULL
@@ -337,7 +339,7 @@ FROM DUAL;
 
 5. 最小值运算符
 
-**语法格式为：LEAST(值1，值2，...，值n)。其中，“值n”表示参数列表中有n个值。在有 两个或多个参数的情况下，返回最小值。**
+**语法格式为：LEAST(值 1，值 2，...，值 n)。其中，“值 n”表示参数列表中有 n 个值。在有 两个或多个参数的情况下，返回最小值。**
 
 ```sql
 SELECT LEAST (1,0,2), LEAST('b','a','c'), LEAST(1,NULL,2)
@@ -348,16 +350,16 @@ FROM DUAL;
 
 6. 最大值运算符
 
-**语法格式为：GREATEST(值1，值2，...，值n)。其中，n表示参数列表中有n个值。当有 两个或多个参数时，返回值为最大值。假如任意一个自变量为NULL，则GREATEST()的返回值为NULL。**
+**语法格式为：GREATEST(值 1，值 2，...，值 n)。其中，n 表示参数列表中有 n 个值。当有 两个或多个参数时，返回值为最大值。假如任意一个自变量为 NULL，则 GREATEST()的返回值为 NULL。**
 
 ```sql
 SELECT GREATEST(1,0,2), GREATEST('b','a','c'), GREATEST(1,NULL,2)
 FROM DUAL;
 ```
 
-7. BETWEEN AND运算符
+7. BETWEEN AND 运算符
 
-**BETWEEN运算符使用的格式通常为SELECT D FROM TABLE WHERE C BETWEEN A AND B，此时，当C大于或等于A，并且C小于或等于B时，结果为1，否则结果为0。**
+**BETWEEN 运算符使用的格式通常为 SELECT D FROM TABLE WHERE C BETWEEN A AND B，此时，当 C 大于或等于 A，并且 C 小于或等于 B 时，结果为 1，否则结果为 0。**
 
 ```sql
 # 查询每月薪水在8000~10000之间的员工姓名和id
@@ -373,9 +375,9 @@ WHERE salary NOT BETWEEN 8000 AND 10000;
 
 ---
 
-8. IN运算符
+8. IN 运算符
 
-**IN运算符用于判断给定的值是否是IN列表中的一个值，如果是则返回1，否则返回0。如果给 定的值为NULL，或者IN列表中存在NULL，则结果为NULL。**
+**IN 运算符用于判断给定的值是否是 IN 列表中的一个值，如果是则返回 1，否则返回 0。如果给 定的值为 NULL，或者 IN 列表中存在 NULL，则结果为 NULL。**
 
 ```sql
 # 查询在50号、90号部门的员工姓名和id
@@ -391,12 +393,12 @@ WHERE department_id NOT IN (50, 90);
 
 ---
 
-9. LIKE运算符
+9. LIKE 运算符
 
-- %：匹配0个或多个字符
-- _：匹配一个字符
+- %：匹配 0 个或多个字符
+- \_：匹配一个字符
 
-**LIKE运算符主要用来匹配字符串，通常用于模糊匹配，如果满足条件则返回1，否则返回 0。如果给定的值或者匹配条件为NULL，则返回结果为NULL。**
+**LIKE 运算符主要用来匹配字符串，通常用于模糊匹配，如果满足条件则返回 1，否则返回 0。如果给定的值或者匹配条件为 NULL，则返回结果为 NULL。**
 
 ```sql
 # 查询姓名中带有字母'A'的员工姓名和薪水
@@ -410,9 +412,9 @@ FROM employees
 WHERE last_name LIKE '_a%';
 ```
 
-10. REGEXP运算符
+10. REGEXP 运算符
 
-**REGEXP运算符用来匹配字符串，语法格式为： RLIKE、REGEXP 匹配条件 。**
+**REGEXP 运算符用来匹配字符串，语法格式为： RLIKE、REGEXP 匹配条件 。**
 
 [正则表达式](https://goregex.cn/)
 
@@ -435,7 +437,7 @@ FROM jobs
 WHERE job_id LIKE 'IT\_%';
 ```
 
-**如果使用\表示转义，要省略ESCAPE。如果不是\，则要加上ESCAPE。**
+**如果使用\表示转义，要省略 ESCAPE。如果不是\，则要加上 ESCAPE。**
 
 ```sql
 SELECT job_id
@@ -445,9 +447,9 @@ WHERE job_id LIKE 'IT$_%' escape '$';
 
 ### 逻辑运算符
 
-**逻辑运算符主要用来判断表达式的真假，在MySQL中，逻辑运算符的返回结果为1、0或者NULL。**
+**逻辑运算符主要用来判断表达式的真假，在 MySQL 中，逻辑运算符的返回结果为 1、0 或者 NULL。**
 
-**MySQL中支持4种逻辑运算符如下：**
+**MySQL 中支持 4 种逻辑运算符如下：**
 
 <img src="/img/mysql/image-20220531195405333.png" />
 
@@ -455,7 +457,7 @@ WHERE job_id LIKE 'IT$_%' escape '$';
 
 **位运算符是在二进制数上进行计算的运算符。位运算符会先将操作数变成二进制数，然后进行位运算， 最后将计算结果从二进制变回十进制数。**
 
-**MySQL支持的位运算符如下：**
+**MySQL 支持的位运算符如下：**
 
 <img src="/img/mysql/image-20220531195442995.png" />
 
@@ -529,7 +531,7 @@ WHERE manager_id IN (100, 101, 110);
 - 使用 ORDER BY 子句排序
   - ASC（ascend）: 升序
   - DESC（descend）:降序
-- ORDER BY 子句在SELECT语句的结尾。
+- ORDER BY 子句在 SELECT 语句的结尾。
 
 1. 单列排序
 
@@ -547,7 +549,7 @@ FROM employees
 ORDER BY department_id DESC
 ```
 
-> - 可以使用不在SELECT列表中的列排序。
+> - 可以使用不在 SELECT 列表中的列排序。
 > - 在对多列进行排序的时候，首先排序的第一列必须有相同的列值，才会对第二列进行排序。如果第 一列数据中所有值都是唯一的，将不再对第二列进行排序。
 
 ---
@@ -575,18 +577,18 @@ SELECT * FROM 表名 LIMIT 10,10;
 SELECT * FROM 表名 LIMIT 20,10;
 ```
 
-> - MySQL 8.0中可以使用“LIMIT 3 OFFSET 4”，意思是获取从第5条记录开始后面的3条记录，和“LIMIT 4,3;”返回的结果相同。
+> - MySQL 8.0 中可以使用“LIMIT 3 OFFSET 4”，意思是获取从第 5 条记录开始后面的 3 条记录，和“LIMIT 4,3;”返回的结果相同。
 
-- 分页显式公式：（当前页数-1）* 每页条数，每页条数
+- 分页显式公式：（当前页数-1）\* 每页条数，每页条数
 
 ```sql
 SELECT * FROM table
 LIMIT(PageNo - 1) * PageSize, PageSize;
 ```
 
-- 注意：LIMIT 子句必须放在整个SELECT语句的最后！
+- 注意：LIMIT 子句必须放在整个 SELECT 语句的最后！
 
-- 使用LIMIT的好处
+- 使用 LIMIT 的好处
 
 **约束返回结果的数量可以 减少数据表的网络传输量 ，也可以 提升查询效率 。如果我们知道返回结果只有 1 条，就可以使用 LIMIT 1 ，告诉 SELECT 语句只需要返回一条记录即可。这样的好处就是 SELECT 不需 要扫描完整的表，只需要检索到一条符合条件的记录即可返回。**
 
@@ -595,13 +597,13 @@ LIMIT(PageNo - 1) * PageSize, PageSize;
 ```sql
 #第05章_排序与分页的课后练习
 
-#1. 查询员工的姓名和部门号和年薪，按年薪降序,按姓名升序显示 
-SELECT first_name, department_id, 
+#1. 查询员工的姓名和部门号和年薪，按年薪降序,按姓名升序显示
+SELECT first_name, department_id,
 (1 + IFNULL(commission_pct,0)) * salary * 12 "年薪"
 FROM employees
 ORDER BY '年薪' DESC, first_name ASC;
 
-#2. 选择工资不在 8000 到 17000 的员工的姓名和工资，按工资降序，显示第21到40位置的数据 
+#2. 选择工资不在 8000 到 17000 的员工的姓名和工资，按工资降序，显示第21到40位置的数据
 SELECT first_name, salary
 FROM employees
 ORDER BY salary DESC
@@ -633,7 +635,7 @@ WHERE e1.manager_id = e2.employee_id;
 
 - 内连接: 合并具有同一列的两个以上的表的行, 结果集中不包含一个表与另一个表不匹配的行
 
-**sql92语法**
+**sql92 语法**
 
 ```sql
 # 查询员工所在的部门信息（没有部门的不显示）
@@ -644,7 +646,7 @@ WHERE e.department_id = d.department_id;
 
 ---
 
-**sql99语法**
+**sql99 语法**
 
 ```sql
 # 查询员工所在的部门信息（没有部门的不显示）
@@ -680,11 +682,11 @@ RIGHT JOIN departments d ON e.department_id = d.department_id;
 
 ---
 
-### UNION的使用
+### UNION 的使用
 
 **合并查询结果**
 
-**利用UNION关键字，可以给出多条SELECT语句，并将它们的结果组合成单个结果集。合并 时，两个表对应的列数和数据类型必须相同，并且相互对应。各个SELECT语句之间使用UNION或UNION ALL关键字分隔。**
+**利用 UNION 关键字，可以给出多条 SELECT 语句，并将它们的结果组合成单个结果集。合并 时，两个表对应的列数和数据类型必须相同，并且相互对应。各个 SELECT 语句之间使用 UNION 或 UNION ALL 关键字分隔。**
 
 **语法格式**
 
@@ -694,10 +696,10 @@ UNION [ALL]
 SELECT column,... FROM table2
 ```
 
-- UNION操作符：UNION 操作符返回两个查询的结果集的并集，去除重复记录。
-- UNION ALL操作符：UNION ALL操作符返回两个查询的结果集的并集。对于两个结果集的重复部分，不去重。
+- UNION 操作符：UNION 操作符返回两个查询的结果集的并集，去除重复记录。
+- UNION ALL 操作符：UNION ALL 操作符返回两个查询的结果集的并集。对于两个结果集的重复部分，不去重。
 
-> - 注意：执行UNION ALL语句时所需要的资源比UNION语句少。如果明确知道合并数据后的结果数据不存在重复数据，或者不需要去除重复的数据，则尽量使用UNION ALL语句，以提高数据查询的效率。
+> - 注意：执行 UNION ALL 语句时所需要的资源比 UNION 语句少。如果明确知道合并数据后的结果数据不存在重复数据，或者不需要去除重复的数据，则尽量使用 UNION ALL 语句，以提高数据查询的效率。
 
 ```sql
 # 查询部门编号>90或邮箱包含a的员工信息
@@ -719,7 +721,7 @@ WHERE department_id > 90;
 
 ---
 
-### 七种SQL JOINS的实现
+### 七种 SQL JOINS 的实现
 
 **如图所示**
 
@@ -778,13 +780,13 @@ WHERE e.department_id IS NULL;
 
 ---
 
-### SQL99语法新特性
+### SQL99 语法新特性
 
 1. 自然连接
 
 **SQL99 在 SQL92 的基础上提供了一些特殊语法，比如 NATURAL JOIN 用来表示自然连接。我们可以把 自然连接理解为 SQL92 中的等值连接。它会帮你自动查询两张连接表中 所有相同的字段 ，然后进行 等值 连接 。**
 
-**在SQL92标准中：**
+**在 SQL92 标准中：**
 
 ```sql
 SELECT employee_id,last_name,department_name
@@ -797,13 +799,13 @@ AND e.manager_id = d.manager_id;
 
 ```sql
 SELECT e.employee_id, e.last_name, d.department_name
-FROM employees e 
+FROM employees e
 NATURAL JOIN departments d;
 ```
 
-2. USING连接
+2. USING 连接
 
-**当我们进行连接的时候，SQL99还支持使用 USING 指定数据表里的 同名字段 进行等值连接。但是只能配 合JOIN一起使用。比如：**
+**当我们进行连接的时候，SQL99 还支持使用 USING 指定数据表里的 同名字段 进行等值连接。但是只能配 合 JOIN 一起使用。比如：**
 
 ```sql
 SELECT employee_id,last_name,department_name
@@ -826,8 +828,8 @@ WHERE e.department_id = d.department_id;
 **表连接的约束条件可以有三种方式：WHERE, ON, USING**
 
 - WHERE：适用于所有关联查询
-- ON ：只能和JOIN一起使用，只能写关联条件。虽然关联条件可以并到WHERE中和其他条件一起 写，但分开写可读性更好。
-- USING：只能和JOIN一起使用，而且要求两个关联字段在关联表中名称一致，而且只能表示关联字 段值相等
+- ON ：只能和 JOIN 一起使用，只能写关联条件。虽然关联条件可以并到 WHERE 中和其他条件一起 写，但分开写可读性更好。
+- USING：只能和 JOIN 一起使用，而且要求两个关联字段在关联表中名称一致，而且只能表示关联字 段值相等
 
 > - 我们要控制连接表的数量 。
 > - 多表连接就相当于嵌套 for 循环一样，非常消耗资源，会让 SQL 查询性能下 降得很严重，因此不要连接不必要的表。
@@ -893,20 +895,20 @@ LEFT JOIN departments d ON e.department_id = d.department_id;
 # 2.查询90号部门员工的job_id和90号部门的location_id
 SELECT e.job_id, l.location_id
 FROM departments d
-JOIN employees e ON e.department_id = d.department_id 
+JOIN employees e ON e.department_id = d.department_id
 JOIN locations l ON l.location_id = d.location_id
 WHERE d.department_id = 90;
 
 # 3.选择所有有奖金的员工的 last_name , department_name , location_id , city
 SELECT e.last_name, d.department_name, l.location_id, l.city
 FROM employees e
-JOIN departments d ON e.department_id = d.department_id 
+JOIN departments d ON e.department_id = d.department_id
 JOIN locations l ON d.location_id = l.location_id
 WHERE e.commission_pct IS NOT NULL;
 
-# 4.选择city在Toronto工作的员工的 last_name , job_id , department_id , department_name 
+# 4.选择city在Toronto工作的员工的 last_name , job_id , department_id , department_name
 SELECT e.last_name, e.job_id, d.department_id, d.department_name
-FROM locations l 
+FROM locations l
 JOIN departments d ON l.location_id = d.location_id
 JOIN employees e ON e.department_id = d.department_id
 WHERE l.city = 'Toronto';
@@ -922,7 +924,7 @@ WHERE d.department_name = 'Executive';
 employees	Emp#	manager	Mgr#
 kochhar		101	king	100
 
-SELECT e1.last_name employees, e1.employee_id "Emp#", 
+SELECT e1.last_name employees, e1.employee_id "Emp#",
 e2.last_name manager, e2.employee_id "Mgr#"
 FROM employees e1
 LEFT JOIN employees e2 ON e1.manager_id = e2.employee_id;
@@ -933,7 +935,7 @@ FROM departments d
 LEFT JOIN employees e ON d.department_id = e.department_id
 WHERE e.department_id IS NULL;
 
-# 8. 查询哪个城市没有部门 
+# 8. 查询哪个城市没有部门
 SELECT city, department_id
 FROM locations l
 LEFT JOIN departments d ON l.location_id = d.department_id
@@ -952,249 +954,249 @@ WHERE d.department_name IN ('Sales', 'IT');
 
 1. 基本函数
 
-| 函数                | 用法                                                         |
-| ------------------- | ------------------------------------------------------------ |
-| ABS(x)              | 返回x的绝对值                                                |
-| SIGN(X)             | 返回一个数字的符号（正数返回1，负数返回-1，0返回0）                                                       |
-| PI()                | 返回圆周率的值                                               |
-| CEIL(x)，CEILING(x) | 返回大于或等于某个值的最小整数                               |
-| FLOOR(x)            | 返回小于或等于某个值的最大整数                               |
-| ROUND(x)            | 返回一个对x的值进行四舍五入后，最接近于X的整数               |
-| ROUND(x,y)          | 返回一个对x的值进行四舍五入后最接近X的值，并保留到小数点后面Y位 |
-| LEAST(e1,e2,e3…)    | 返回列表中的最小值                                           |
-| GREATEST(e1,e2,e3…) | 返回列表中的最大值                                           |
-| MOD(x,y)            | 返回X除以Y后的余数                                           |
-| RAND()              | 返回0~1的随机值                                              |
-| RAND(x)             | 返回0~1的随机值，其中x的值用作种子值，相同的X值会产生相同的随机 数 |
-| TRUNCATE(x,y)       | 返回数字x截断为y位小数的结果                                 |
-| SQRT(x)             | 返回x的平方根。当X的值为负数时，返回NULL                     |
+| 函数                | 用法                                                                     |
+| ------------------- | ------------------------------------------------------------------------ |
+| ABS(x)              | 返回 x 的绝对值                                                          |
+| SIGN(X)             | 返回一个数字的符号（正数返回 1，负数返回-1，0 返回 0）                   |
+| PI()                | 返回圆周率的值                                                           |
+| CEIL(x)，CEILING(x) | 返回大于或等于某个值的最小整数                                           |
+| FLOOR(x)            | 返回小于或等于某个值的最大整数                                           |
+| ROUND(x)            | 返回一个对 x 的值进行四舍五入后，最接近于 X 的整数                       |
+| ROUND(x,y)          | 返回一个对 x 的值进行四舍五入后最接近 X 的值，并保留到小数点后面 Y 位    |
+| LEAST(e1,e2,e3…)    | 返回列表中的最小值                                                       |
+| GREATEST(e1,e2,e3…) | 返回列表中的最大值                                                       |
+| MOD(x,y)            | 返回 X 除以 Y 后的余数                                                   |
+| RAND()              | 返回 0~1 的随机值                                                        |
+| RAND(x)             | 返回 0~1 的随机值，其中 x 的值用作种子值，相同的 X 值会产生相同的随机 数 |
+| TRUNCATE(x,y)       | 返回数字 x 截断为 y 位小数的结果                                         |
+| SQRT(x)             | 返回 x 的平方根。当 X 的值为负数时，返回 NULL                            |
 
 2. 角度与弧度互换函数
 
-| 函数       | 用法                                  |
-| ---------- | ------------------------------------- |
-| RADIANS(x) | 将角度转化为弧度，其中，参数x为角度值 |
-| DEGREES(x) | 将弧度转化为角度，其中，参数x为弧度值 |
+| 函数       | 用法                                    |
+| ---------- | --------------------------------------- |
+| RADIANS(x) | 将角度转化为弧度，其中，参数 x 为角度值 |
+| DEGREES(x) | 将弧度转化为角度，其中，参数 x 为弧度值 |
 
 3. 三角函数
 
-| 函数       | 用法                                                         |
-| ---------- | ------------------------------------------------------------ |
-| SIN(x)     | 将角度转化为弧度，其中，参数x为角度值                        |
-| ASIN(x)    | 将弧度转化为角度，其中，参数x为弧度值                        |
-| COS(x)     | 返回x的余弦值，其中，参数x为弧度值                           |
-| ACOS(x)    | 返回x的反余弦值，即获取余弦为x的值。如果x的值不在-1到1之间，则返回NULL |
-| TAN(x)     | 返回x的正切值，其中，参数x为弧度值                           |
-| ATAN(x)    | 返回x的反正切值，即返回正切值为x的值                         |
-| ATAN2(m,n) | 返回两个参数的反正切值                                       |
-| COT(x)     | 返回x的余切值，其中，X为弧度值                               |
+| 函数       | 用法                                                                             |
+| ---------- | -------------------------------------------------------------------------------- |
+| SIN(x)     | 将角度转化为弧度，其中，参数 x 为角度值                                          |
+| ASIN(x)    | 将弧度转化为角度，其中，参数 x 为弧度值                                          |
+| COS(x)     | 返回 x 的余弦值，其中，参数 x 为弧度值                                           |
+| ACOS(x)    | 返回 x 的反余弦值，即获取余弦为 x 的值。如果 x 的值不在-1 到 1 之间，则返回 NULL |
+| TAN(x)     | 返回 x 的正切值，其中，参数 x 为弧度值                                           |
+| ATAN(x)    | 返回 x 的反正切值，即返回正切值为 x 的值                                         |
+| ATAN2(m,n) | 返回两个参数的反正切值                                                           |
+| COT(x)     | 返回 x 的余切值，其中，X 为弧度值                                                |
 
 4. 指数与对数函数
 
-| 函数                 | 用法                                                 |
-| -------------------- | ---------------------------------------------------- |
-| POW(x,y)，POWER(X,Y) | 返回x的y次方                                         |
-| EXP(X)               | 返回e的X次方，其中e是一个常数，2.718281828459045     |
-| LN(X)，LOG(X)        | 返回以e为底的X的对数，当X <= 0 时，返回的结果为NULL  |
-| LOG10(X)             | 返回以10为底的X的对数，当X <= 0 时，返回的结果为NULL |
-| LOG2(X)              | 返回以2为底的X的对数，当X <= 0 时，返回NULL          |
+| 函数                 | 用法                                                       |
+| -------------------- | ---------------------------------------------------------- |
+| POW(x,y)，POWER(X,Y) | 返回 x 的 y 次方                                           |
+| EXP(X)               | 返回 e 的 X 次方，其中 e 是一个常数，2.718281828459045     |
+| LN(X)，LOG(X)        | 返回以 e 为底的 X 的对数，当 X <= 0 时，返回的结果为 NULL  |
+| LOG10(X)             | 返回以 10 为底的 X 的对数，当 X <= 0 时，返回的结果为 NULL |
+| LOG2(X)              | 返回以 2 为底的 X 的对数，当 X <= 0 时，返回 NULL          |
 
 5. 进制间的转换
 
-| 函数          | 用法                     |
-| ------------- | ------------------------ |
-| BIN(x)        | 返回x的二进制编码        |
-| HEX(x)        | 返回x的十六进制编码      |
-| OCT(x)        | 返回x的八进制编码        |
-| CONV(x,f1,f2) | 返回f1进制数变成f2进制数 |
+| 函数          | 用法                         |
+| ------------- | ---------------------------- |
+| BIN(x)        | 返回 x 的二进制编码          |
+| HEX(x)        | 返回 x 的十六进制编码        |
+| OCT(x)        | 返回 x 的八进制编码          |
+| CONV(x,f1,f2) | 返回 f1 进制数变成 f2 进制数 |
 
 ### 字符串函数
 
-| 函数                              | 用法                                                         |
-| --------------------------------- | ------------------------------------------------------------ |
-| ASCII(S)                          | 返回字符串S中的第一个字符的ASCII码值                         |
-| CHAR_LENGTH(s)                    | 返回字符串s的字符数。作用与CHARACTER_LENGTH(s)相同           |
-| LENGTH(s)                         | 返回字符串s的字节数，和字符集有关                            |
-| CONCAT(s1,s2,......,sn)           | 连接s1,s2,......,sn为一个字符串                              |
-| CONCAT_WS(x, s1,s2,......,sn)     | 同CONCAT(s1,s2,...)函数，但是每个字符串之间要加上x           |
-| INSERT(str, idx, len, replacestr) | 将字符串str从第idx位置开始，len个字符长的子串替换为字符串replacestr |
-| REPLACE(str, a, b)                | 用字符串b替换字符串str中所有出现的字符串a                    |
-| UPPER(s) 或 UCASE(s)              | 将字符串s的所有字母转成大写字母                              |
-| LOWER(s) 或LCASE(s)               | 将字符串s的所有字母转成小写字母                              |
-| LEFT(str,n)                       | 返回字符串str最左边的n个字符                                 |
-| RIGHT(str,n)                      | 返回字符串str最右边的n个字符                                 |
-| LPAD(str, len, pad)               | 用字符串pad对str最左边进行填充，直到str的长度为len个字符     |
-| RPAD(str ,len, pad)               | 用字符串pad对str最右边进行填充，直到str的长度为len个字符     |
-| LTRIM(s)                          | 去掉字符串s左侧的空格                                        |
-| RTRIM(s)                          | 去掉字符串s右侧的空格                                        |
-| TRIM(s)                           | 去掉字符串s开始与结尾的空格                                  |
-| TRIM(s1 FROM s)                   | 去掉字符串s开始与结尾的s1                                    |
-| TRIM(LEADING s1 FROM s)           | 去掉字符串s开始处的s1                                        |
-| TRIM(TRAILING s1 FROM s)          | 去掉字符串s结尾处的s1                                        |
-| REPEAT(str, n)                    | 返回str重复n次的结果                                         |
-| SPACE(n)                          | 返回n个空格                                                  |
-| STRCMP(s1,s2)                     | 比较字符串s1,s2的ASCII码值的大小                             |
-| SUBSTR(s,index,len)               | 返回从字符串s的index位置其len个字符，作用与SUBSTRING(s,n,len)、 MID(s,n,len)相同 |
-| LOCATE(substr,str)                | 返回字符串substr在字符串str中首次出现的位置，作用于POSITION(substr IN str)、INSTR(str,substr)相同。未找到，返回0 |
-| ELT(m,s1,s2,…,sn)                 | 返回指定位置的字符串，如果m=1，则返回s1，如果m=2，则返回s2，如果m=n，则返回sn |
-| FIELD(s,s1,s2,…,sn)               | 返回字符串s在字符串列表中第一次出现的位置                    |
-| FIND_IN_SET(s1,s2)                | 返回字符串s1在字符串s2中出现的位置。其中，字符串s2是一个以逗号分隔的字符串 |
-| REVERSE(s)                        | 返回s反转后的字符串                                          |
-| NULLIF(value1,value2)             | 比较两个字符串，如果value1与value2相等，则返回NULL，否则返回 value1 |
+| 函数                              | 用法                                                                                                                   |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| ASCII(S)                          | 返回字符串 S 中的第一个字符的 ASCII 码值                                                                               |
+| CHAR_LENGTH(s)                    | 返回字符串 s 的字符数。作用与 CHARACTER_LENGTH(s)相同                                                                  |
+| LENGTH(s)                         | 返回字符串 s 的字节数，和字符集有关                                                                                    |
+| CONCAT(s1,s2,......,sn)           | 连接 s1,s2,......,sn 为一个字符串                                                                                      |
+| CONCAT_WS(x, s1,s2,......,sn)     | 同 CONCAT(s1,s2,...)函数，但是每个字符串之间要加上 x                                                                   |
+| INSERT(str, idx, len, replacestr) | 将字符串 str 从第 idx 位置开始，len 个字符长的子串替换为字符串 replacestr                                              |
+| REPLACE(str, a, b)                | 用字符串 b 替换字符串 str 中所有出现的字符串 a                                                                         |
+| UPPER(s) 或 UCASE(s)              | 将字符串 s 的所有字母转成大写字母                                                                                      |
+| LOWER(s) 或 LCASE(s)              | 将字符串 s 的所有字母转成小写字母                                                                                      |
+| LEFT(str,n)                       | 返回字符串 str 最左边的 n 个字符                                                                                       |
+| RIGHT(str,n)                      | 返回字符串 str 最右边的 n 个字符                                                                                       |
+| LPAD(str, len, pad)               | 用字符串 pad 对 str 最左边进行填充，直到 str 的长度为 len 个字符                                                       |
+| RPAD(str ,len, pad)               | 用字符串 pad 对 str 最右边进行填充，直到 str 的长度为 len 个字符                                                       |
+| LTRIM(s)                          | 去掉字符串 s 左侧的空格                                                                                                |
+| RTRIM(s)                          | 去掉字符串 s 右侧的空格                                                                                                |
+| TRIM(s)                           | 去掉字符串 s 开始与结尾的空格                                                                                          |
+| TRIM(s1 FROM s)                   | 去掉字符串 s 开始与结尾的 s1                                                                                           |
+| TRIM(LEADING s1 FROM s)           | 去掉字符串 s 开始处的 s1                                                                                               |
+| TRIM(TRAILING s1 FROM s)          | 去掉字符串 s 结尾处的 s1                                                                                               |
+| REPEAT(str, n)                    | 返回 str 重复 n 次的结果                                                                                               |
+| SPACE(n)                          | 返回 n 个空格                                                                                                          |
+| STRCMP(s1,s2)                     | 比较字符串 s1,s2 的 ASCII 码值的大小                                                                                   |
+| SUBSTR(s,index,len)               | 返回从字符串 s 的 index 位置其 len 个字符，作用与 SUBSTRING(s,n,len)、 MID(s,n,len)相同                                |
+| LOCATE(substr,str)                | 返回字符串 substr 在字符串 str 中首次出现的位置，作用于 POSITION(substr IN str)、INSTR(str,substr)相同。未找到，返回 0 |
+| ELT(m,s1,s2,…,sn)                 | 返回指定位置的字符串，如果 m=1，则返回 s1，如果 m=2，则返回 s2，如果 m=n，则返回 sn                                    |
+| FIELD(s,s1,s2,…,sn)               | 返回字符串 s 在字符串列表中第一次出现的位置                                                                            |
+| FIND_IN_SET(s1,s2)                | 返回字符串 s1 在字符串 s2 中出现的位置。其中，字符串 s2 是一个以逗号分隔的字符串                                       |
+| REVERSE(s)                        | 返回 s 反转后的字符串                                                                                                  |
+| NULLIF(value1,value2)             | 比较两个字符串，如果 value1 与 value2 相等，则返回 NULL，否则返回 value1                                               |
 
-> 注意：MySQL中，字符串的位置是从1开始的。
+> 注意：MySQL 中，字符串的位置是从 1 开始的。
 
 ### 日期和时间函数
 
 1. 获取日期、时间
 
-| 函数                                                         | 用法                            |
-| ------------------------------------------------------------ | ------------------------------- |
-| CURDATE() ，CURRENT_DATE()                                   | 返回当前日期，只包含年、 月、日 |
-| CURTIME() ， CURRENT_TIME()                                  | 返回当前时间，只包含时、 分、秒 |
+| 函数                                                                     | 用法                            |
+| ------------------------------------------------------------------------ | ------------------------------- |
+| CURDATE() ，CURRENT_DATE()                                               | 返回当前日期，只包含年、 月、日 |
+| CURTIME() ， CURRENT_TIME()                                              | 返回当前时间，只包含时、 分、秒 |
 | NOW() / SYSDATE() / CURRENT_TIMESTAMP() / LOCALTIME() / LOCALTIMESTAMP() | 返回当前系统日期和时间          |
-| UTC_DATE()                                                   | 返回UTC（世界标准时间） 日期    |
-| UTC_TIME()                                                   | 返回UTC（世界标准时间） 时间    |
+| UTC_DATE()                                                               | 返回 UTC（世界标准时间） 日期   |
+| UTC_TIME()                                                               | 返回 UTC（世界标准时间） 时间   |
 
 2. 日期与时间戳的转换
 
-| 函数                     | 用法                                                         |
-| ------------------------ | ------------------------------------------------------------ |
-| UNIX_TIMESTAMP()         | 以UNIX时间戳的形式返回当前时间。SELECT UNIX_TIMESTAMP() - >1634348884 |
-| UNIX_TIMESTAMP(date)     | 将时间date以UNIX时间戳的形式返回。                           |
-| FROM_UNIXTIME(timestamp) | 将UNIX时间戳的时间转换为普通格式的时间                       |
+| 函数                     | 用法                                                                    |
+| ------------------------ | ----------------------------------------------------------------------- |
+| UNIX_TIMESTAMP()         | 以 UNIX 时间戳的形式返回当前时间。SELECT UNIX_TIMESTAMP() - >1634348884 |
+| UNIX_TIMESTAMP(date)     | 将时间 date 以 UNIX 时间戳的形式返回。                                  |
+| FROM_UNIXTIME(timestamp) | 将 UNIX 时间戳的时间转换为普通格式的时间                                |
 
 3. 获取月份、星期、星期数、天数等函数
 
-| 函数                                     | 用法                                             |
-| ---------------------------------------- | ------------------------------------------------ |
-| YEAR(date) / MONTH(date) / DAY(date)     | 返回具体的日期值                                 |
-| HOUR(time) / MINUTE(time) / SECOND(time) | 返回具体的时间值                                 |
-| FROM_UNIXTIME(timestamp)                 | 将UNIX时间戳的时间转换为普通格式的时间           |
-| MONTHNAME(date)                          | 返回月份：January，...                           |
-| DAYNAME(date)                            | 返回星期几：MONDAY，TUESDAY.....SUNDAY           |
-| WEEKDAY(date)                            | 返回周几，注意，周1是0，周2是1，。。。周日是6    |
-| QUARTER(date)                            | 返回日期对应的季度，范围为1～4                   |
-| WEEK(date) ， WEEKOFYEAR(date)           | 返回一年中的第几周                               |
-| DAYOFYEAR(date)                          | 返回日期是一年中的第几天                         |
-| DAYOFMONTH(date)                         | 返回日期位于所在月份的第几天                     |
-| DAYOFWEEK(date)                          | 返回周几，注意：周日是1，周一是2，。。。周六是 7 |
+| 函数                                     | 用法                                                 |
+| ---------------------------------------- | ---------------------------------------------------- |
+| YEAR(date) / MONTH(date) / DAY(date)     | 返回具体的日期值                                     |
+| HOUR(time) / MINUTE(time) / SECOND(time) | 返回具体的时间值                                     |
+| FROM_UNIXTIME(timestamp)                 | 将 UNIX 时间戳的时间转换为普通格式的时间             |
+| MONTHNAME(date)                          | 返回月份：January，...                               |
+| DAYNAME(date)                            | 返回星期几：MONDAY，TUESDAY.....SUNDAY               |
+| WEEKDAY(date)                            | 返回周几，注意，周 1 是 0，周 2 是 1，。。。周日是 6 |
+| QUARTER(date)                            | 返回日期对应的季度，范围为 1 ～ 4                    |
+| WEEK(date) ， WEEKOFYEAR(date)           | 返回一年中的第几周                                   |
+| DAYOFYEAR(date)                          | 返回日期是一年中的第几天                             |
+| DAYOFMONTH(date)                         | 返回日期位于所在月份的第几天                         |
+| DAYOFWEEK(date)                          | 返回周几，注意：周日是 1，周一是 2，。。。周六是 7   |
 
 4. 日期的操作函数
 
-| 函数                    | 用法                                       |
-| ----------------------- | ------------------------------------------ |
-| EXTRACT(type FROM date) | 返回指定日期中特定的部分，type指定返回的值 |
+| 函数                    | 用法                                        |
+| ----------------------- | ------------------------------------------- |
+| EXTRACT(type FROM date) | 返回指定日期中特定的部分，type 指定返回的值 |
 
-**EXTRACT(type FROM date)函数中type的取值与含义：**
+**EXTRACT(type FROM date)函数中 type 的取值与含义：**
 
 <img src="/img/mysql/image-20220601162705975.png">
 
 5. 时间和秒钟转换的函数
 
-| 函数                 | 用法                                                         |
-| -------------------- | ------------------------------------------------------------ |
+| 函数                 | 用法                                                               |
+| -------------------- | ------------------------------------------------------------------ |
 | TIME_TO_SEC(time)    | 将 time 转化为秒并返回结果值。转化的公式为： 小时*3600+分钟 *60+秒 |
-| SEC_TO_TIME(seconds) | 将 seconds 描述转化为包含小时、分钟和秒的时间                |
+| SEC_TO_TIME(seconds) | 将 seconds 描述转化为包含小时、分钟和秒的时间                      |
 
 6. 计算日期和时间的函数
 
-| 函数                                                         | 用法                                           |
-| ------------------------------------------------------------ | ---------------------------------------------- |
-| DATE_ADD(datetime, INTERVAL expr type)， ADDDATE(date,INTERVAL expr type) | 返回与给定日期时间相差INTERVAL时间段的日期时间 |
-| DATE_SUB(date,INTERVAL expr type)， SUBDATE(date,INTERVAL expr type) | 返回与date相差INTERVAL时间间隔的日期           |
+| 函数                                                                      | 用法                                             |
+| ------------------------------------------------------------------------- | ------------------------------------------------ |
+| DATE_ADD(datetime, INTERVAL expr type)， ADDDATE(date,INTERVAL expr type) | 返回与给定日期时间相差 INTERVAL 时间段的日期时间 |
+| DATE_SUB(date,INTERVAL expr type)， SUBDATE(date,INTERVAL expr type)      | 返回与 date 相差 INTERVAL 时间间隔的日期         |
 
-**上述函数中type的取值：**
+**上述函数中 type 的取值：**
 
 <img src="/img/mysql/image-20220601165055639.png">
 
-| 函数                         | 用法                                                         |
-| ---------------------------- | ------------------------------------------------------------ |
-| ADDTIME(time1,time2)         | 返回time1加上time2的时间。当time2为一个数字时，代表的是 秒 ，可以为负数 |
-| SUBTIME(time1,time2)         | 返回time1减去time2后的时间。当time2为一个数字时，代表的 是 秒 ，可以为负数 |
-| DATEDIFF(date1,date2)        | 返回date1 - date2的日期间隔天数                              |
-| TIMEDIFF(time1, time2)       | 返回time1 - time2的时间间隔                                  |
-| FROM_DAYS(N)                 | 返回从0000年1月1日起，N天以后的日期                          |
-| TO_DAYS(date)                | 返回日期date距离0000年1月1日的天数                           |
-| LAST_DAY(date)               | 返回date所在月份的最后一天的日期                             |
-| MAKEDATE(year,n)             | 针对给定年份与所在年份中的天数返回一个日期                   |
-| MAKETIME(hour,minute,second) | 将给定的小时、分钟和秒组合成时间并返回                       |
-| PERIOD_ADD(time,n)           | 返回time加上n后的时间                                        |
+| 函数                         | 用法                                                                             |
+| ---------------------------- | -------------------------------------------------------------------------------- |
+| ADDTIME(time1,time2)         | 返回 time1 加上 time2 的时间。当 time2 为一个数字时，代表的是 秒 ，可以为负数    |
+| SUBTIME(time1,time2)         | 返回 time1 减去 time2 后的时间。当 time2 为一个数字时，代表的 是 秒 ，可以为负数 |
+| DATEDIFF(date1,date2)        | 返回 date1 - date2 的日期间隔天数                                                |
+| TIMEDIFF(time1, time2)       | 返回 time1 - time2 的时间间隔                                                    |
+| FROM_DAYS(N)                 | 返回从 0000 年 1 月 1 日起，N 天以后的日期                                       |
+| TO_DAYS(date)                | 返回日期 date 距离 0000 年 1 月 1 日的天数                                       |
+| LAST_DAY(date)               | 返回 date 所在月份的最后一天的日期                                               |
+| MAKEDATE(year,n)             | 针对给定年份与所在年份中的天数返回一个日期                                       |
+| MAKETIME(hour,minute,second) | 将给定的小时、分钟和秒组合成时间并返回                                           |
+| PERIOD_ADD(time,n)           | 返回 time 加上 n 后的时间                                                        |
 
 7. 日期的格式化与解析
 
-| 函数                              | 用法                                       |
-| --------------------------------- | ------------------------------------------ |
-| DATE_FORMAT(date,fmt)             | 按照字符串fmt格式化日期date值              |
-| TIME_FORMAT(time,fmt)             | 按照字符串fmt格式化时间time值              |
-| GET_FORMAT(date_type,format_type) | 返回日期字符串的显示格式                   |
-| STR_TO_DATE(str, fmt)             | 按照字符串fmt对str进行解析，解析为一个日期 |
+| 函数                              | 用法                                           |
+| --------------------------------- | ---------------------------------------------- |
+| DATE_FORMAT(date,fmt)             | 按照字符串 fmt 格式化日期 date 值              |
+| TIME_FORMAT(time,fmt)             | 按照字符串 fmt 格式化时间 time 值              |
+| GET_FORMAT(date_type,format_type) | 返回日期字符串的显示格式                       |
+| STR_TO_DATE(str, fmt)             | 按照字符串 fmt 对 str 进行解析，解析为一个日期 |
 
-**上述 非GET_FORMAT 函数中fmt参数常用的格式符：**
+**上述 非 GET_FORMAT 函数中 fmt 参数常用的格式符：**
 
-| 格式符 | 说明                                                         | 格式符  | 说明                                                         |
-| ------ | ------------------------------------------------------------ | ------- | ------------------------------------------------------------ |
-| %Y     | 4位数字表示年份                                              | %y      | 表示两位数字表示年份                                         |
-| %M     | 月名表示月份（January,....）                                 | %m      | 两位数字表示月份 （01,02,03。。。）                          |
-| %b     | 缩写的月名（Jan.，Feb.，....）                               | %c      | 数字表示月份（1,2,3,...）                                    |
-| %D     | 英文后缀表示月中的天数 （1st,2nd,3rd,...）                   | %d      | 两位数字表示月中的天数(01,02...)                             |
-| %e     | 数字形式表示月中的天数 （1,2,3,4,5.....）                    |         |                                                              |
-| %H     | 两位数字表示小数，24小时制 （01,02..）                       | %h 和%I | 两位数字表示小时，12小时制 （01,02..）                       |
-| %k     | 数字形式的小时，24小时制(1,2,3)                              | %l      | 数字形式表示小时，12小时制 （1,2,3,4....）                   |
-| %i     | 两位数字表示分钟（00,01,02）                                 | %S 和%s | 两位数字表示秒(00,01,02...)                                  |
-| %W     | 一周中的星期名称（Sunday...）                                | %a      | 一周中的星期缩写（Sun.， Mon.,Tues.，..）                    |
-| %w     | 以数字表示周中的天数 (0=Sunday,1=Monday....)                 |         |                                                              |
-| %j     | 以3位数字表示年中的天数(001,002...)                          | %U      | 以数字表示年中的第几周， （1,2,3。。）其中Sunday为周中第一 天 |
-| %u     | 以数字表示年中的第几周， （1,2,3。。）其中Monday为周中第一 天 |         |                                                              |
-| %T     | 24小时制                                                     | %r      | 12小时制                                                     |
-| %p     | AM或PM                                                       | %%      | 表示%                                                        |
+| 格式符 | 说明                                                            | 格式符  | 说明                                                            |
+| ------ | --------------------------------------------------------------- | ------- | --------------------------------------------------------------- |
+| %Y     | 4 位数字表示年份                                                | %y      | 表示两位数字表示年份                                            |
+| %M     | 月名表示月份（January,....）                                    | %m      | 两位数字表示月份 （01,02,03。。。）                             |
+| %b     | 缩写的月名（Jan.，Feb.，....）                                  | %c      | 数字表示月份（1,2,3,...）                                       |
+| %D     | 英文后缀表示月中的天数 （1st,2nd,3rd,...）                      | %d      | 两位数字表示月中的天数(01,02...)                                |
+| %e     | 数字形式表示月中的天数 （1,2,3,4,5.....）                       |         |                                                                 |
+| %H     | 两位数字表示小数，24 小时制 （01,02..）                         | %h 和%I | 两位数字表示小时，12 小时制 （01,02..）                         |
+| %k     | 数字形式的小时，24 小时制(1,2,3)                                | %l      | 数字形式表示小时，12 小时制 （1,2,3,4....）                     |
+| %i     | 两位数字表示分钟（00,01,02）                                    | %S 和%s | 两位数字表示秒(00,01,02...)                                     |
+| %W     | 一周中的星期名称（Sunday...）                                   | %a      | 一周中的星期缩写（Sun.， Mon.,Tues.，..）                       |
+| %w     | 以数字表示周中的天数 (0=Sunday,1=Monday....)                    |         |                                                                 |
+| %j     | 以 3 位数字表示年中的天数(001,002...)                           | %U      | 以数字表示年中的第几周， （1,2,3。。）其中 Sunday 为周中第一 天 |
+| %u     | 以数字表示年中的第几周， （1,2,3。。）其中 Monday 为周中第一 天 |         |                                                                 |
+| %T     | 24 小时制                                                       | %r      | 12 小时制                                                       |
+| %p     | AM 或 PM                                                        | %%      | 表示%                                                           |
 
 ### 流程控制函数
 
-**流程处理函数可以根据不同的条件，执行不同的处理流程，可以在SQL语句中实现不同的条件选择。 MySQL中的流程处理函数主要包括IF()、IFNULL()和CASE()函数。**
+**流程处理函数可以根据不同的条件，执行不同的处理流程，可以在 SQL 语句中实现不同的条件选择。 MySQL 中的流程处理函数主要包括 IF()、IFNULL()和 CASE()函数。**
 
-| 函数                                                         | 用法                                             |
-| ------------------------------------------------------------ | ------------------------------------------------ |
-| IF(value,value1,value2)                                      | 如果value的值为TRUE，返回value1， 否则返回value2 |
-| IFNULL(value1, value2)                                       | 如果value1不为NULL，返回value1，否则返回value2   |
-| CASE WHEN 条件1 THEN 结果1 WHEN 条件2 THEN 结果2 .... [ELSE resultn] END | 相当于Java的if...else if...else...               |
-| CASE expr WHEN 常量值1 THEN 值1 WHEN 常量值1 THEN 值1 .... [ELSE 值n] END | 相当于Java的switch...case...                     |
+| 函数                                                                           | 用法                                                  |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| IF(value,value1,value2)                                                        | 如果 value 的值为 TRUE，返回 value1， 否则返回 value2 |
+| IFNULL(value1, value2)                                                         | 如果 value1 不为 NULL，返回 value1，否则返回 value2   |
+| CASE WHEN 条件 1 THEN 结果 1 WHEN 条件 2 THEN 结果 2 .... [ELSE resultn] END   | 相当于 Java 的 if...else if...else...                 |
+| CASE expr WHEN 常量值 1 THEN 值 1 WHEN 常量值 1 THEN 值 1 .... [ELSE 值 n] END | 相当于 Java 的 switch...case...                       |
 
 ### 加密与解密函数
 
 **加密与解密函数主要用于对数据库中的数据进行加密和解密处理，以防止数据被他人窃取。这些函数在保证数据库安全时非常有用。**
 
-| 函数                        | 用法                                                         |
-| --------------------------- | ------------------------------------------------------------ |
-| PASSWORD(str)               | 返回字符串str的加密版本，41位长的字符串。加密结果不可逆 ，常用于用户的密码加密 |
-| MD5(str)                    | 返回字符串str的md5加密后的值，也是一种加密方式。若参数为 NULL，则会返回NULL |
-| SHA(str)                    | 从原明文密码str计算并返回加密后的密码字符串，当参数为 NULL时，返回NULL。 SHA加密算法比MD5更加安全 。 |
-| ENCODE(value,password_seed) | 返回使用password_seed作为加密密码加密value                   |
-| DECODE(value,password_seed) | 返回使用password_seed作为加密密码解密value                   |
+| 函数                        | 用法                                                                                                        |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| PASSWORD(str)               | 返回字符串 str 的加密版本，41 位长的字符串。加密结果不可逆 ，常用于用户的密码加密                           |
+| MD5(str)                    | 返回字符串 str 的 md5 加密后的值，也是一种加密方式。若参数为 NULL，则会返回 NULL                            |
+| SHA(str)                    | 从原明文密码 str 计算并返回加密后的密码字符串，当参数为 NULL 时，返回 NULL。 SHA 加密算法比 MD5 更加安全 。 |
+| ENCODE(value,password_seed) | 返回使用 password_seed 作为加密密码加密 value                                                               |
+| DECODE(value,password_seed) | 返回使用 password_seed 作为加密密码解密 value                                                               |
 
-### MySQL信息函数
+### MySQL 信息函数
 
-**MySQL中内置了一些可以查询MySQL信息的函数，这些函数主要用于帮助数据库开发或运维人员更好地 对数据库进行维护工作。**
+**MySQL 中内置了一些可以查询 MySQL 信息的函数，这些函数主要用于帮助数据库开发或运维人员更好地 对数据库进行维护工作。**
 
-| 函数                                                   | 用法                                                      |
-| ------------------------------------------------------ | --------------------------------------------------------- |
-| VERSION()                                              | 返回当前MySQL的版本号                                     |
-| CONNECTION_ID()                                        | 返回当前MySQL服务器的连接数                               |
-| DATABASE()，SCHEMA()                                   | 返回MySQL命令行当前所在的数据库                           |
-| USER()，CURRENT_USER()、SYSTEM_USER()， SESSION_USER() | 返回当前连接MySQL的用户名，返回结果格式为 “主机名@用户名” |
-| CHARSET(value)                                         | 返回字符串value自变量的字符集                             |
-| COLLATION(value)                                       | 返回字符串value的比较规则                                 |
+| 函数                                                   | 用法                                                        |
+| ------------------------------------------------------ | ----------------------------------------------------------- |
+| VERSION()                                              | 返回当前 MySQL 的版本号                                     |
+| CONNECTION_ID()                                        | 返回当前 MySQL 服务器的连接数                               |
+| DATABASE()，SCHEMA()                                   | 返回 MySQL 命令行当前所在的数据库                           |
+| USER()，CURRENT_USER()、SYSTEM_USER()， SESSION_USER() | 返回当前连接 MySQL 的用户名，返回结果格式为 “主机名@用户名” |
+| CHARSET(value)                                         | 返回字符串 value 自变量的字符集                             |
+| COLLATION(value)                                       | 返回字符串 value 的比较规则                                 |
 
-**MySQL中有些函数无法对其进行具体的分类，但是这些函数在MySQL的开发和运维过程中也是不容忽视 的。**
+**MySQL 中有些函数无法对其进行具体的分类，但是这些函数在 MySQL 的开发和运维过程中也是不容忽视 的。**
 
-| 函数                           | 用法                                                         |
-| ------------------------------ | ------------------------------------------------------------ |
-| FORMAT(value,n)                | 返回对数字value进行格式化后的结果数据。n表示 四舍五入 后保留 到小数点后n位 |
-| CONV(value,from,to)            | 将value的值进行不同进制之间的转换                            |
-| INET_ATON(ipvalue)             | 将以点分隔的IP地址转化为一个数字                             |
-| INET_NTOA(value)               | 将数字形式的IP地址转化为以点分隔的IP地址                     |
-| BENCHMARK(n,expr)              | 将表达式expr重复执行n次。用于测试MySQL处理expr表达式所耗费 的时间 |
-| CONVERT(value USING char_code) | 将value所使用的字符编码修改为char_code                       |
+| 函数                           | 用法                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------- |
+| FORMAT(value,n)                | 返回对数字 value 进行格式化后的结果数据。n 表示 四舍五入 后保留 到小数点后 n 位 |
+| CONV(value,from,to)            | 将 value 的值进行不同进制之间的转换                                             |
+| INET_ATON(ipvalue)             | 将以点分隔的 IP 地址转化为一个数字                                              |
+| INET_NTOA(value)               | 将数字形式的 IP 地址转化为以点分隔的 IP 地址                                    |
+| BENCHMARK(n,expr)              | 将表达式 expr 重复执行 n 次。用于测试 MySQL 处理 expr 表达式所耗费 的时间       |
+| CONVERT(value USING char_code) | 将 value 所使用的字符编码修改为 char_code                                       |
 
 ### 练习
 
@@ -1202,8 +1204,8 @@ WHERE d.department_name IN ('Sales', 'IT');
 #第07章_单行函数的课后练习
 
 # 1.显示系统时间(注：日期+时间)
-SELECT CONCAT_WS(' ', CURDATE(), CURTIME()), 
-CONCAT_WS(' ', CURRENT_DATE(), CURRENT_TIME()), 
+SELECT CONCAT_WS(' ', CURDATE(), CURTIME()),
+CONCAT_WS(' ', CURRENT_DATE(), CURRENT_TIME()),
 NOW(), SYSDATE(), CURRENT_TIMESTAMP(), LOCALTIME(), LOCALTIMESTAMP()
 FROM DUAL;
 
@@ -1221,7 +1223,7 @@ SELECT CONCAT_WS(' ', employee_id, last_name, salary) OUT_PUT
 FROM employees;
 
 # 5.查询公司各员工工作的年数、工作的天数，并按工作年数的降序排序
-SELECT employee_id, TRUNCATE(DATEDIFF(NOW(), hire_date) / 365, 1) "work_years", 
+SELECT employee_id, TRUNCATE(DATEDIFF(NOW(), hire_date) / 365, 1) "work_years",
 DATEDIFF(NOW(), hire_date) "work_days"
 FROM employees
 ORDER BY work_years DESC;
@@ -1240,8 +1242,8 @@ FROM employees
 WHERE DATEDIFF(NOW(),hire_date) > 10000;
 
 # 8.做一个查询，产生下面的结果
-#<last_name> earns <salary> monthly but wants <salary*3> 
-SELECT 
+#<last_name> earns <salary> monthly but wants <salary*3>
+SELECT
 CONCAT_WS(' ',last_name, 'earns', salary, 'monthly', 'but', 'wants', salary * 3) '梦想'
 FROM employees;
 
@@ -1281,25 +1283,27 @@ FROM employees;
 > - MAX()
 > - COUNT()
 
-1. AVG和SUM函数
+1. AVG 和 SUM 函数
 
 ```sql
 SELECT department_id, AVG(salary), SUM(salary)
 FROM employees
 WHERE department_id IN (40, 50)
 ```
+
 ---
 
-2. MIN和MAX函数
+2. MIN 和 MAX 函数
 
 ```sql
 SELECT department_id, MIN(salary), MAX(salary)
 FROM employees
 WHERE department_id IN (40, 50)
 ```
+
 ---
 
-3. COUNT函数
+3. COUNT 函数
 
 ```sql
 SELECT COUNT(*)
@@ -1307,17 +1311,18 @@ FROM employees
 WHERE department_id = 40;
 ```
 
-- 问题：用count(*)，count(1)，count(列名)谁好呢?
-> - 其实，对于MyISAM引擎的表是没有区别的。这种引擎内部有一计数器在维护着行数。 Innodb引擎的表用count(*),count(1)直接读行数，复杂度是O(n)，因为innodb真的要去数一遍。但好 于具体的count(列名)。
+- 问题：用 count(\*)，count(1)，count(列名)谁好呢?
 
-- 问题：能不能使用count(列名)替换count(*)?
-> - 不要使用 count(列名)来替代 count() ， count() 是 SQL92 定义的标准统计行数的语法，跟数 据库无关，跟 NULL 和非 NULL 无关。 说明：count(*)会统计值为 NULL 的行，而 count(列名)不会统计此列为 NULL 值的行。
+  > - 其实，对于 MyISAM 引擎的表是没有区别的。这种引擎内部有一计数器在维护着行数。 Innodb 引擎的表用 count(\*),count(1)直接读行数，复杂度是 O(n)，因为 innodb 真的要去数一遍。但好 于具体的 count(列名)。
+
+- 问题：能不能使用 count(列名)替换 count(\*)?
+  > - 不要使用 count(列名)来替代 count() ， count() 是 SQL92 定义的标准统计行数的语法，跟数 据库无关，跟 NULL 和非 NULL 无关。 说明：count(\*)会统计值为 NULL 的行，而 count(列名)不会统计此列为 NULL 值的行。
 
 ### GROUP BY
 
 1. 基本使用
 
-**可以使用GROUP BY子句将表中的数据分成若干组**
+**可以使用 GROUP BY 子句将表中的数据分成若干组**
 
 ```sql
 SELECT column, group_function(column)
@@ -1326,13 +1331,14 @@ FROM table
 [GROUP BY group_by_expression]
 [ORDER BY column];
 ```
-> - 结论1：SELECT中出现的非组函数的字段必须声明在GROUP BY中。
-> - 反之，GROUP BY中声明的字段可以不出现在SELECT中。
-> - 结论2：GROUP BY声明在FROM后面、WHERE后面、ORDER BY前面、LIMIT前面。
+
+> - 结论 1：SELECT 中出现的非组函数的字段必须声明在 GROUP BY 中。
+> - 反之，GROUP BY 中声明的字段可以不出现在 SELECT 中。
+> - 结论 2：GROUP BY 声明在 FROM 后面、WHERE 后面、ORDER BY 前面、LIMIT 前面。
 
 ---
 
-2. 使用WITH ROLLBACK
+2. 使用 WITH ROLLBACK
 
 **总计**
 
@@ -1342,17 +1348,18 @@ FROM employees
 WHERE department_id > 80
 GROUP BY department_id WITH ROLLUP;
 ```
-> - 注意： 当使用ROLLUP时，不能同时使用ORDER BY子句进行结果排序，即ROLLUP和ORDER BY是互相排斥的。
+
+> - 注意： 当使用 ROLLUP 时，不能同时使用 ORDER BY 子句进行结果排序，即 ROLLUP 和 ORDER BY 是互相排斥的。
 
 ---
 
 ### HAVING
 
-**过滤分组：HAVING子句**
+**过滤分组：HAVING 子句**
 
 > - 行已经被分组。
 > - 使用了聚合函数。
-> - 满足HAVING 子句中条件的分组将被显示。
+> - 满足 HAVING 子句中条件的分组将被显示。
 > - HAVING 不能单独使用，必须要跟 GROUP BY 一起使用。
 
 1. 基本使用
@@ -1366,35 +1373,35 @@ HAVING MAX(salary) > 8000;
 
 **要求**
 
-> - 如果过滤条件中使用了聚合函数，则必须使用HAVING来替换WHERE。否则，报错。
-> - 当过滤条件中没有聚合函数时，则次过滤条件声明在WHERE中或HAVING中都可以。但是，建议声明在WHERE中的执行效率高。
-> - HAVING必须声明在GROUP BY 的后面
-> - 开发中，我们使用HAVING的前提是SQL中使用了GROUP BY。
+> - 如果过滤条件中使用了聚合函数，则必须使用 HAVING 来替换 WHERE。否则，报错。
+> - 当过滤条件中没有聚合函数时，则次过滤条件声明在 WHERE 中或 HAVING 中都可以。但是，建议声明在 WHERE 中的执行效率高。
+> - HAVING 必须声明在 GROUP BY 的后面
+> - 开发中，我们使用 HAVING 的前提是 SQL 中使用了 GROUP BY。
 
 ---
 
-2. WHERE和HAVING的对比
+2. WHERE 和 HAVING 的对比
 
-**区别1：WHERE 可以直接使用表中的字段作为筛选条件，但不能使用分组中的计算函数作为筛选条件； HAVING 必须要与 GROUP BY 配合使用，可以把分组计算的函数和分组字段作为筛选条件。**
+**区别 1：WHERE 可以直接使用表中的字段作为筛选条件，但不能使用分组中的计算函数作为筛选条件； HAVING 必须要与 GROUP BY 配合使用，可以把分组计算的函数和分组字段作为筛选条件。**
 
-> - 这决定了，在需要对数据进行分组统计的时候，HAVING 可以完成 WHERE 不能完成的任务。这是因为， 在查询语法结构中，WHERE 在 GROUP BY 之前，所以无法对分组结果进行筛选。HAVING 在 GROUP BY 之 后，可以使用分组字段和分组中的计算函数，对分组的结果集进行筛选，这个功能是 WHERE 无法完成 的。另外，WHERE排除的记录不再包括在分组中。
+> - 这决定了，在需要对数据进行分组统计的时候，HAVING 可以完成 WHERE 不能完成的任务。这是因为， 在查询语法结构中，WHERE 在 GROUP BY 之前，所以无法对分组结果进行筛选。HAVING 在 GROUP BY 之 后，可以使用分组字段和分组中的计算函数，对分组的结果集进行筛选，这个功能是 WHERE 无法完成 的。另外，WHERE 排除的记录不再包括在分组中。
 
-**区别2：如果需要通过连接从关联表中获取需要的数据，WHERE 是先筛选后连接，而 HAVING 是先连接 后筛选。**
+**区别 2：如果需要通过连接从关联表中获取需要的数据，WHERE 是先筛选后连接，而 HAVING 是先连接 后筛选。**
 
 > - 这一点，就决定了在关联查询中，WHERE 比 HAVING 更高效。因为 WHERE 可以先筛选，用一 个筛选后的较小数据集和关联表进行连接，这样占用的资源比较少，执行效率也比较高。HAVING 则需要 先把结果集准备好，也就是用未被筛选的数据集进行关联，然后对这个大的数据集进行筛选，这样占用 的资源就比较多，执行效率也较低。
 
 **小结如下**
 
-| 关键字 | 用法 | 缺点 |
-| ----- | --- | --- |
-| WHERE | 先筛选数据再关联，执行效率高 | 不能使用分组中的计算函数进行筛选 |
-| HAVING | 可以使用分组中的计算函数 | 在最后的结果集中进行筛选，执行效率较低 |
+| 关键字 | 用法                         | 缺点                                   |
+| ------ | ---------------------------- | -------------------------------------- |
+| WHERE  | 先筛选数据再关联，执行效率高 | 不能使用分组中的计算函数进行筛选       |
+| HAVING | 可以使用分组中的计算函数     | 在最后的结果集中进行筛选，执行效率较低 |
 
 **开发中的选择：**
 
 > - WHERE 和 HAVING 也不是互相排斥的，我们可以在一个查询里面同时使用 WHERE 和 HAVING。包含分组 统计函数的条件用 HAVING，普通条件用 WHERE。这样，我们就既利用了 WHERE 条件的高效快速，又发 挥了 HAVING 可以使用包含分组统计函数的查询条件的优点。当数据量特别大的时候，运行效率会有很 大的差别。
 
-### SELECT的执行过程
+### SELECT 的执行过程
 
 1. 查询的结构
 
@@ -1460,7 +1467,7 @@ LIMIT 2 # 顺序 7
 
 ---
 
-2. SQL执行原理
+2. SQL 执行原理
 
 **SELECT 是先执行 FROM 这一步的。在这个阶段，如果是多张表联查，还会经历下面的几个步骤：**
 
@@ -1519,7 +1526,7 @@ GROUP BY department_name, location_id
 ORDER BY AVG(e.salary) DESC;
 # 在列中出现的字段（非聚合函数），在分组中都需要出现
 
-# 8.查询每个工种、每个部门的部门名、工种名和最低工资 
+# 8.查询每个工种、每个部门的部门名、工种名和最低工资
 SELECT d.department_name, e.job_id, MIN(e.salary)
 FROM employees e
 JOIN departments d ON d.department_id = e.department_id
@@ -1537,9 +1544,9 @@ GROUP BY job_id, department_name;
 - 子查询（内查询）在主查询之前一次执行完成。
 - 子查询的结果被主查询（外查询）使用 。
 - 注意事项
-> - 子查询要包含在括号内
-> - 将子查询放在比较条件的右侧
-> - 单行操作符对应单行子查询，多行操作符对应多行子查询
+  > - 子查询要包含在括号内
+  > - 将子查询放在比较条件的右侧
+  > - 单行操作符对应单行子查询，多行操作符对应多行子查询
 
 ---
 
@@ -1547,7 +1554,7 @@ GROUP BY job_id, department_name;
 
 **子查询的分类**
 
-1. 分类方式1
+1. 分类方式 1
 
 **我们按内查询的结果返回一条还是多条记录，将子查询分为 单行子查询 、 多行子查询 。**
 
@@ -1559,7 +1566,7 @@ GROUP BY job_id, department_name;
 
 <img src="/img/mysql/image-20220603135544144.png" />
 
-2. 分类方式2
+2. 分类方式 2
 
 **我们按内查询是否被执行多次，将子查询划分为 相关(或关联)子查询 和 不相关(或非关联)子查询。**
 
@@ -1572,14 +1579,14 @@ GROUP BY job_id, department_name;
 
 1. 单行比较符
 
-| 操作符 | 含义 |
-| ----- | --- |
-| = | 等于 | 
-| > | 大于 |
-| >= | 大于等于 |
-| < | 小于 |
-| <= | 小于等于 |
-| <> | 不等于 |
+| 操作符 | 含义     |
+| ------ | -------- |
+| =      | 等于     |
+| >      | 大于     |
+| >=     | 大于等于 |
+| <      | 小于     |
+| <=     | 小于等于 |
+| <>     | 不等于   |
 
 2. 代码示例
 
@@ -1619,7 +1626,7 @@ HAVING MIN(salary) > (
 );
 ```
 
-3. CASE中的子查询
+3. CASE 中的子查询
 
 ```sql
 # 显式员工的employee_id,last_name和location。其中，若员工department_id与location_id为1800 的department_id相同，则location为’Canada’，其余则为’USA’。
@@ -1647,6 +1654,7 @@ WHERE job_id = (
                 WHERE last_name = 'Haas'
 );
 ```
+
 > - 子查询不返回任何行
 
 5. 非法使用子查询
@@ -1660,6 +1668,7 @@ WHERE salary = (
                 GROUP BY department_id
 );
 ```
+
 > - 多行子查询使用单行比较符
 
 ---
@@ -1672,12 +1681,12 @@ WHERE salary = (
 
 1. 多行比较操作符
 
-| 操作符 | 含义 |
-| ----- | --- |
-| IN | 等于列表中的任意一个 |
-| ANY | 需要和单行比较操作符一起使用，和子查询返回的某一个值比较 |
-| ALL | 需要和单行比较符一起使用，和子查询返回的所有值比较 |
-| SOME | 实际上是ANY的别名，作用相同，一般常使用ANY |
+| 操作符 | 含义                                                     |
+| ------ | -------------------------------------------------------- |
+| IN     | 等于列表中的任意一个                                     |
+| ANY    | 需要和单行比较操作符一起使用，和子查询返回的某一个值比较 |
+| ALL    | 需要和单行比较符一起使用，和子查询返回的所有值比较       |
+| SOME   | 实际上是 ANY 的别名，作用相同，一般常使用 ANY            |
 
 2. 代码示例
 
@@ -1760,7 +1769,7 @@ WHERE salary > (
 );
 ```
 
-**在ORDER BY 中使用子查询：**
+**在 ORDER BY 中使用子查询：**
 
 ```sql
 # 1.查询员工的id,salary,按照department_name 排序
@@ -1782,16 +1791,16 @@ WHERE 2 <= (
 );
 ```
 
-2. EXISTS与NOT EXISTS关键字
+2. EXISTS 与 NOT EXISTS 关键字
 
-- 关联子查询通常也会和 EXISTS操作符一起来使用，用来检查在子查询中是否存在满足条件的行。
+- 关联子查询通常也会和 EXISTS 操作符一起来使用，用来检查在子查询中是否存在满足条件的行。
 - 如果在子查询中不存在满足条件的行：
   - 条件返回 FALSE
   - 继续在子查询中查找
 - 如果在子查询中存在满足条件的行：
   - 不在子查询中继续查找
   - 条件返回 TRUE
-- NOT EXISTS关键字表示如果不存在某种条件，则返回TRUE，否则返回FALSE。
+- NOT EXISTS 关键字表示如果不存在某种条件，则返回 TRUE，否则返回 FALSE。
 
 ```sql
 # 查询公司管理者的employee_id，last_name，job_id，department_id信息
@@ -1823,6 +1832,7 @@ SET column = (
               WHERE alias1.column = alias2.column
 );
 ```
+
 **使用相关子查询依据一个表中的数据更新另一个表的数据。**
 
 ```sql
@@ -1881,11 +1891,12 @@ WHERE salary > (
                 FROM employees
                 WHERE last_name = 'Abel'
 );
+```
 
 **问题：以上两种方式有好坏之分吗？**
+
 - 解答：自连接方式好！
 - 题目中可以使用子查询，也可以使用自连接。一般情况建议你使用自连接，因为在许多 DBMS 的处理过 程中，对于自连接的处理速度要比子查询快得多。 可以这样理解：子查询实际上是通过未知表进行查询后的条件判断，而自连接是通过已知的自身数据表 进行条件判断，因此在大部分 DBMS 中都对自连接处理进行了优化。
-```
 
 ---
 
