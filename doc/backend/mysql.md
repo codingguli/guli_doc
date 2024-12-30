@@ -2313,4 +2313,166 @@ WHERE 2 < (
 );
 ```
 
+## 第十章：创建和管理表
+
+### 基础知识
+
+1. 标识符命名规则
+
+- 数据库名、表名不得超过30个字符，变量名限制为29个
+- 必须只能包含 A–Z, a–z, 0–9, _共63个字符
+- 数据库名、表名、字段名等对象名中间不要包含空格
+- 同一个MySQL软件中，数据库不能同名；同一个库中，表不能重名；同一个表中，字段不能重名
+- 必须保证你的字段没有和保留字、数据库系统或常用方法冲突。如果坚持使用，请在SQL语句中使 用`（着重号）引起来
+- 保持字段名和类型的一致性：在命名字段并为其指定数据类型的时候一定要保证一致性，假如数据 类型在一个表里是整数，那在另一个表里可就别变成字符型了
+
+---
+
+2. mysql的数据类型
+
+| 类型             | 数据变量                                                     |
+| ---------------- | ------------------------------------------------------------ |
+| 整数类型         | TINYINT、SMALLINT、MEDIUMINT、INT(或INTEGER)、BIGINT         |
+| 浮点类型         | FLOAT、DOUBLE                                                |
+| 定点数类型       | DECIMAL                                                      |
+| 位类型           | BIT                                                          |
+| 日期时间类型     | YEAR、TIME、DATE、DATETIME、TIMESTAMP                        |
+| 文本字符串类型   | CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT          |
+| 枚举类型         | ENUM                                                         |
+| 集合类型         | SET                                                          |
+| 二进制字符串类型 | BINARY、VARBINARY、TINYBLOB、BLOB、MEDIUMBLOB、LONGBLOB      |
+| JSON类型         | JSON对象、JSON数组                                           |
+| 空间数据类型     | 单值：GEOMETRY、POINT、LINESTRING、POLYGON； 集合：MULTIPOINT、MULTILINESTRING、MULTIPOLYGON、 GEOMETRYCOLLECTION |
+
+**其中，常用的几类类型介绍如下：**
+
+| 数据类型      | 描述                                                    |
+| ------------- | ------------------------------------------------------- |
+| INT           | 从-2^31到2^31-1的整型数据。存储大小为 4个字节           |
+| CHAR(size)    | FLOAT、DOUBLE                                           |
+| VARCHAR(size) | DECIMAL                                                 |
+| FLOAT(M,D)    | BIT                                                     |
+| DOUBLE(M,D)   | YEAR、TIME、DATE、DATETIME、TIMESTAMP                   |
+| DECIMAL(M,D)  | CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT     |
+| DATE          | ENUM                                                    |
+| BLOB          | SET                                                     |
+| TEXT          | BINARY、VARBINARY、TINYBLOB、BLOB、MEDIUMBLOB、LONGBLOB |
+
+### 创建和管理数据库
+
+1. 创建数据库
+
+- 方式1：创建数据库
+
+```sql
+CREATE DATABASE 数据库名;
+```
+
+- 方式2：创建数据库并指定字符集
+
+```sql
+CREATE DATABASE 数据库名 CHARACTER SET 字符集;
+```
+
+- 方式3：判断数据库是否已经存在，不存在则创建数据库（推荐）
+
+```sql
+CREATE DATABASE IF NOT EXISTS 数据库名;
+```
+
+**如果MySQL中已经存在相关的数据库，则忽略创建语句，不再创建数据库。**
+> 注意：DATABASE 不能改名。一些可视化工具可以改名，它是建新库，把所有表复制到新库，再删 旧库完成的。
+
+---
+
+2. 使用数据库
+
+- 查看当前所有的数据库
+
+```sql
+SHOW DATABASES;
+```
+
+- 查看当前正在使用的数据库
+
+```sql
+SELECT DATABASE();
+```
+
+- 查看指定库下的所有表
+
+```sql
+SHOW TABLES FROM 数据库名;
+```
+
+- 查看数据库的创建信息
+
+```sql
+SHOW CREATE DATABASE 数据库名;
+或者：
+SHOW CREATE DATABASE 数据库名\G
+```
+
+- 使用/切换数据库
+
+```sql
+USE 数据库名;
+```
+> 注意：要操作表格和数据之前必须先说明是对哪个数据库进行操作，否则就要对所有对象加上“数 据库名.”。
+
+---
+
+3. 修改数据库
+
+- 更改数据库字符集
+
+```sql
+ALTER DATABASE 数据库名 CHARACTER SET 字符集;
+```
+
+- 方式1：删除指定的数据库
+
+```sql
+DROP DATABASE 数据库名;
+```
+
+- 方式2：删除指定的数据库（推荐）
+
+```sql
+DROP DATABASE IF EXISTS 数据库名;
+```
+
+### 创建表
+
+1. 创建方式1
+
+- 语法格式
+
+```sql
+CREATE TABLE [IF NOT EXISTS] 表名 (
+  字段1, 数据类型 [类型约束] [默认值],
+  字段2, 数据类型 [类型约束] [默认值],
+  字段3, 数据类型 [类型约束] [默认值],
+  ......
+  [表约束条件]
+)
+```
+> 加上了IF NOT EXISTS关键字，则表示：如果当前数据库中不存在要创建的数据表，则创建数据表； 如果当前数据库中已经存在要创建的数据表，则忽略建表语句，不再创建数据表。
+
+---
+
+2. 创建方式2
+
+---
+
+3. 查看数据表结构
+
+### 修改表
+
+### 删除表
+
+### 清空表
+
+### 内容拓展
+
 [笔记来源：https://github.com/codinglin/StudyNotes](https://github.com/codinglin/StudyNotes)
