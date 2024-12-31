@@ -2319,36 +2319,36 @@ WHERE 2 < (
 
 1. 标识符命名规则
 
-- 数据库名、表名不得超过30个字符，变量名限制为29个
-- 必须只能包含 A–Z, a–z, 0–9, _共63个字符
+- 数据库名、表名不得超过 30 个字符，变量名限制为 29 个
+- 必须只能包含 A–Z, a–z, 0–9, \_共 63 个字符
 - 数据库名、表名、字段名等对象名中间不要包含空格
-- 同一个MySQL软件中，数据库不能同名；同一个库中，表不能重名；同一个表中，字段不能重名
-- 必须保证你的字段没有和保留字、数据库系统或常用方法冲突。如果坚持使用，请在SQL语句中使 用`（着重号）引起来
+- 同一个 MySQL 软件中，数据库不能同名；同一个库中，表不能重名；同一个表中，字段不能重名
+- 必须保证你的字段没有和保留字、数据库系统或常用方法冲突。如果坚持使用，请在 SQL 语句中使 用`（着重号）引起来
 - 保持字段名和类型的一致性：在命名字段并为其指定数据类型的时候一定要保证一致性，假如数据 类型在一个表里是整数，那在另一个表里可就别变成字符型了
 
 ---
 
-2. mysql的数据类型
+2. mysql 的数据类型
 
-| 类型             | 数据变量                                                     |
-| ---------------- | ------------------------------------------------------------ |
-| 整数类型         | TINYINT、SMALLINT、MEDIUMINT、INT(或INTEGER)、BIGINT         |
-| 浮点类型         | FLOAT、DOUBLE                                                |
-| 定点数类型       | DECIMAL                                                      |
-| 位类型           | BIT                                                          |
-| 日期时间类型     | YEAR、TIME、DATE、DATETIME、TIMESTAMP                        |
-| 文本字符串类型   | CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT          |
-| 枚举类型         | ENUM                                                         |
-| 集合类型         | SET                                                          |
-| 二进制字符串类型 | BINARY、VARBINARY、TINYBLOB、BLOB、MEDIUMBLOB、LONGBLOB      |
-| JSON类型         | JSON对象、JSON数组                                           |
+| 类型             | 数据变量                                                                                                          |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| 整数类型         | TINYINT、SMALLINT、MEDIUMINT、INT(或 INTEGER)、BIGINT                                                             |
+| 浮点类型         | FLOAT、DOUBLE                                                                                                     |
+| 定点数类型       | DECIMAL                                                                                                           |
+| 位类型           | BIT                                                                                                               |
+| 日期时间类型     | YEAR、TIME、DATE、DATETIME、TIMESTAMP                                                                             |
+| 文本字符串类型   | CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT                                                               |
+| 枚举类型         | ENUM                                                                                                              |
+| 集合类型         | SET                                                                                                               |
+| 二进制字符串类型 | BINARY、VARBINARY、TINYBLOB、BLOB、MEDIUMBLOB、LONGBLOB                                                           |
+| JSON 类型        | JSON 对象、JSON 数组                                                                                              |
 | 空间数据类型     | 单值：GEOMETRY、POINT、LINESTRING、POLYGON； 集合：MULTIPOINT、MULTILINESTRING、MULTIPOLYGON、 GEOMETRYCOLLECTION |
 
 **其中，常用的几类类型介绍如下：**
 
 | 数据类型      | 描述                                                    |
 | ------------- | ------------------------------------------------------- |
-| INT           | 从-2^31到2^31-1的整型数据。存储大小为 4个字节           |
+| INT           | 从-2^31 到 2^31-1 的整型数据。存储大小为 4 个字节       |
 | CHAR(size)    | FLOAT、DOUBLE                                           |
 | VARCHAR(size) | DECIMAL                                                 |
 | FLOAT(M,D)    | BIT                                                     |
@@ -2362,25 +2362,26 @@ WHERE 2 < (
 
 1. 创建数据库
 
-- 方式1：创建数据库
+- 方式 1：创建数据库
 
 ```sql
 CREATE DATABASE 数据库名;
 ```
 
-- 方式2：创建数据库并指定字符集
+- 方式 2：创建数据库并指定字符集
 
 ```sql
 CREATE DATABASE 数据库名 CHARACTER SET 字符集;
 ```
 
-- 方式3：判断数据库是否已经存在，不存在则创建数据库（推荐）
+- 方式 3：判断数据库是否已经存在，不存在则创建数据库（推荐）
 
 ```sql
 CREATE DATABASE IF NOT EXISTS 数据库名;
 ```
 
-**如果MySQL中已经存在相关的数据库，则忽略创建语句，不再创建数据库。**
+**如果 MySQL 中已经存在相关的数据库，则忽略创建语句，不再创建数据库。**
+
 > 注意：DATABASE 不能改名。一些可视化工具可以改名，它是建新库，把所有表复制到新库，再删 旧库完成的。
 
 ---
@@ -2418,6 +2419,7 @@ SHOW CREATE DATABASE 数据库名\G
 ```sql
 USE 数据库名;
 ```
+
 > 注意：要操作表格和数据之前必须先说明是对哪个数据库进行操作，否则就要对所有对象加上“数 据库名.”。
 
 ---
@@ -2430,13 +2432,13 @@ USE 数据库名;
 ALTER DATABASE 数据库名 CHARACTER SET 字符集;
 ```
 
-- 方式1：删除指定的数据库
+- 方式 1：删除指定的数据库
 
 ```sql
 DROP DATABASE 数据库名;
 ```
 
-- 方式2：删除指定的数据库（推荐）
+- 方式 2：删除指定的数据库（推荐）
 
 ```sql
 DROP DATABASE IF EXISTS 数据库名;
@@ -2444,7 +2446,7 @@ DROP DATABASE IF EXISTS 数据库名;
 
 ### 创建表
 
-1. 创建方式1
+1. 创建方式 1
 
 - 语法格式
 
@@ -2457,11 +2459,12 @@ CREATE TABLE [IF NOT EXISTS] 表名 (
   [表约束条件]
 )
 ```
-> 加上了IF NOT EXISTS关键字，则表示：如果当前数据库中不存在要创建的数据表，则创建数据表； 如果当前数据库中已经存在要创建的数据表，则忽略建表语句，不再创建数据表。
+
+> 加上了 IF NOT EXISTS 关键字，则表示：如果当前数据库中不存在要创建的数据表，则创建数据表； 如果当前数据库中已经存在要创建的数据表，则忽略建表语句，不再创建数据表。
 
 ---
 
-2. 创建方式2
+2. 创建方式 2
 
 - 使用 AS subquery 选项，将创建表和插入数据结合起来
 
@@ -2470,6 +2473,7 @@ CREATE TABLE 表名
 	[(column, column, ...)]
 AS subquery;
 ```
+
 - 指定的列和子查询中的列要一一对应
 - 通过列名和默认值定义列
 
@@ -2490,7 +2494,7 @@ WHERE NULL;
 **语法**
 
 ```sql
-ALTER TABLE 表名 
+ALTER TABLE 表名
 ADD 【COLUMN】 字段名 字段类型 【FIRST|AFTER 字段名】;
 ```
 
@@ -2517,7 +2521,7 @@ ADD email VARCHAR(45) AFTER id;
 - 修改字段数据类型、长度、默认值、位置的语法格式如下：
 
 ```sql
-ALTER TABLE 表名 
+ALTER TABLE 表名
 MODIFY 【COLUMN】 字段名1 字段类型 【DEFAULT 默认值】【FIRST|AFTER 字段名2】;
 ```
 
@@ -2527,6 +2531,7 @@ MODIFY 【COLUMN】 字段名1 字段类型 【DEFAULT 默认值】【FIRST|AFTE
 ALTER TABLE myemp2
 MODIFY emp_name VARCHAR(25) DEFAULT '未知';
 ```
+
 > 对默认值的修改只影响今后对表的修改
 > 此外，还可以通过此种方式修改列的约束。
 
@@ -2534,10 +2539,10 @@ MODIFY emp_name VARCHAR(25) DEFAULT '未知';
 
 3. 重命名一个字段
 
-**使用 CHANGE old_column new_column dataType子句重命名列。语法格式如下：**
+**使用 CHANGE old_column new_column dataType 子句重命名列。语法格式如下：**
 
 ```sql
-ALTER TABLE 表名 
+ALTER TABLE 表名
 CHANGE 【column】 列名 新列名 新数据类型;
 ```
 
@@ -2555,7 +2560,7 @@ CHANGE salary monthly_salary DOUBLE(10, 2);
 **删除表中某个字段的语法格式如下：**
 
 ```sql
-ALTER TABLE 表名 
+ALTER TABLE 表名
 DROP 【COLUMN】字段名
 ```
 
@@ -2570,14 +2575,14 @@ DROP email;
 
 ### 重命名表
 
-- 方式一：使用RENAME
+- 方式一：使用 RENAME
 
 ```sql
 RENAME TABLE myemp2
 TO myemp3;
 ```
 
-- 方式二：使用ALTER
+- 方式二：使用 ALTER
 
 ```sql
 ALTER TABLE myemp3
@@ -2591,7 +2596,7 @@ RENAME myemp2;
 
 ### 删除表
 
-- 在MySQL中，当一张数据表 没有与其他任何数据表形成关联关系 时，可以将当前数据表直接删除。
+- 在 MySQL 中，当一张数据表 没有与其他任何数据表形成关联关系 时，可以将当前数据表直接删除。
 - 数据和结构都被删除
 - 所有正在运行的相关事务被提交
 - 所有相关索引被删除
@@ -2615,7 +2620,9 @@ DROP TABLE myemp1;
 
 ### 清空表
 
-- TRUNCATE TABLE语句：
+1. 清空表语法
+
+- TRUNCATE TABLE 语句：
   - 删除表中所有的数据
   - 释放表的存储空间
 - 举例
@@ -2624,11 +2631,95 @@ DROP TABLE myemp1;
 TRUNCATE TABLE myemp2;
 ```
 
-- TRUNCATE语句不能回滚，而使用 DELETE 语句删除数据，可以回滚
-> 阿里开发规范： 【参考】TRUNCATE TABLE 比 DELETE 速度快，且使用的系统和事务日志资源少，但 TRUNCATE 无 事务且不触发 TRIGGER，有可能造成事故，故不建议在开发代码中使用此语句。 说明：TRUNCATE TABLE 在功能上与不带 WHERE 子句的 DELETE 语句相同。
+- TRUNCATE 语句不能回滚，而使用 DELETE 语句删除数据，可以回滚
+  > 阿里开发规范： 【参考】TRUNCATE TABLE 比 DELETE 速度快，且使用的系统和事务日志资源少，但 TRUNCATE 无 事务且不触发 TRIGGER，有可能造成事故，故不建议在开发代码中使用此语句。 说明：TRUNCATE TABLE 在功能上与不带 WHERE 子句的 DELETE 语句相同。
+
+2. 清空表比较
+
+**DCL中得COMMIT和ROLLBACK**
+
+- COMMIT：提交数据，一旦执行COMMIT，数据将永久保存在数据库。
+- ROLLBACK：回滚数据，一旦执行ROLLBACK，则可以实现数据的回滚，回滚到最近一次COMMIT之后。
+
+**对比 RUNCAYE TABLE和DELETE FROM**
+
+- 相同点：都可以实现对表中的所有数据进行删除，同时保留表结构
+- 不同点：
+  - TRUNCATE TABLE：一旦执行此操作，表数据全部清除，同时数据不可回滚。
+  - DELETE FROM：一旦执行此操作，表数据可以全部清除（不带WHERE），同时数据可以实现回滚。
+
+**DDL和DML的说明**
+
+- DDL的操作一旦执行，就不可回滚。
+- DML的操作默认情况，一旦执行，也是不可回滚的。但是如果执行DML之前，执行了SET autocommit = FALSE, 则执行的DML操作就可以实现回滚。
+
+**测试DELETE FROM**
+
+```sql
+COMMIT;
+
+SET autocommit = FALSE;
+
+SELECT *
+FROM myemp1;
+
+DELETE FROM MYEMP1;
+
+SELECT *
+FROM myemp1;
+
+ROLLBACK;
+
+SELECT *
+FROM myemp1;
+```
+
+**测试TRUNCATE TABLE**
+
+```sql
+COMMIT;
+
+SET autocommit = FALSE;
+
+SELECT *
+FROM myemp1;
+
+TRUNCATE TABLE MYEMP1;
+
+SELECT *
+FROM myemp1;
+
+ROLLBACK;
+
+SELECT *
+FROM myemp1;
+```
 
 ---
 
 ### 内容拓展
+
+**拓展 1：阿里巴巴《Java 开发手册》之 MySQL 字段命名**
+
+- 【 强制 】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出 现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。
+  > 正例：aliyun_admin，rdc_config，level3_name
+  > 反例：AliyunAdmin，rdcConfig，level_3_name
+- 【 强制 】禁用保留字，如 desc、range、match、delayed 等，请参考 MySQL 官方保留字。
+- 【 强制 】表必备三字段：id, gmt_create, gmt_modified。
+  > 说明：其中 id 必为主键，类型为 BIGINT UNSIGNED、单表时自增、步长为 1。gmt_create, gmt_modified 的类型均为 DATETIME 类型，前者现在时表示主动式创建，后者过去分词表示被 动式更新
+- 【 推荐 】表的命名最好是遵循 “业务名称\_表的作用”。
+  > 正例：alipay_task 、 force_project、 trade_config
+- 【 推荐 】库名与应用名称尽量一致。
+- 【参考】合适的字符存储长度，不但节约数据库表空间、节约索引存储，更重要的是提升检索速度。
+  > 正例：无符号值可以避免误存负数，且扩大了表示范围。
+
+**扩展 2：操作注意要求**
+
+- 表删除 操作将把表的定义和表中的数据一起删除，并且 MySQL 在执行删除操作时，不会有任何的确认信 息提示，因此执行删除操时应当慎重。在删除表前，最好对表中的数据进行 备份 ，这样当操作失误时可 以对数据进行恢复，以免造成无法挽回的后果。
+- 同样的，在使用 ALTER TABLE 进行表的基本修改操作时，在执行操作过程之前，也应该确保对数据进 行完整的 备份 ，因为数据库的改变是 无法撤销 的，如果添加了一个不需要的字段，可以将其删除；相 同的，如果删除了一个需要的列，该列下面的所有数据都将会丢失。
+
+**扩展 3：MySQL8 新特性—DDL 的原子化**
+
+- 在 MySQL 8.0 版本中，InnoDB 表的 DDL 支持事务完整性，即 DDL 操作要么成功要么回滚 。DDL 操作回滚日志 写入到 data dictionary 数据字典表 mysql.innodb_ddl_log（该表是隐藏的表，通过 show tables 无法看到） 中，用于回滚操作。通过设置参数，可将 DDL 操作日志打印输出到 MySQL 错误日志中。
 
 [笔记来源：https://github.com/codinglin/StudyNotes](https://github.com/codinglin/StudyNotes)
