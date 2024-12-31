@@ -2450,9 +2450,9 @@ DROP DATABASE IF EXISTS 数据库名;
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] 表名 (
-  字段1, 数据类型 [类型约束] [默认值],
-  字段2, 数据类型 [类型约束] [默认值],
-  字段3, 数据类型 [类型约束] [默认值],
+  字段1 数据类型 [类型约束] [默认值],
+  字段2 数据类型 [类型约束] [默认值],
+  字段3 数据类型 [类型约束] [默认值],
   ......
   [表约束条件]
 )
@@ -2463,15 +2463,171 @@ CREATE TABLE [IF NOT EXISTS] 表名 (
 
 2. 创建方式2
 
----
+- 使用 AS subquery 选项，将创建表和插入数据结合起来
 
-3. 查看数据表结构
+```sql
+CREATE TABLE 表名
+	[(column, column, ...)]
+AS subquery;
+```
+- 指定的列和子查询中的列要一一对应
+- 通过列名和默认值定义列
+
+```sql
+CREATE TABLE myemp1
+AS
+SELECT *
+FROM employees
+WHERE NULL;
+```
+
+---
 
 ### 修改表
 
+1. 添加一个字段
+
+**语法**
+
+```sql
+ALTER TABLE 表名 
+ADD 【COLUMN】 字段名 字段类型 【FIRST|AFTER 字段名】;
+```
+
+**示例**
+
+```sql
+ALTER TABLE myemp1
+ADD salary DOUBLE(10, 2);
+
+# 放在第一位
+ALTER TABLE myemp2
+ADD phone_number VARCHAR(20) FIRST;
+
+# 在某一个字段后面
+ALTER TABLE myemp2
+ADD email VARCHAR(45) AFTER id;
+```
+
+---
+
+2. 修改一个字段
+
+- 可以修改列的数据类型，长度、默认值和位置
+- 修改字段数据类型、长度、默认值、位置的语法格式如下：
+
+```sql
+ALTER TABLE 表名 
+MODIFY 【COLUMN】 字段名1 字段类型 【DEFAULT 默认值】【FIRST|AFTER 字段名2】;
+```
+
+**示例**
+
+```sql
+ALTER TABLE myemp2
+MODIFY emp_name VARCHAR(25) DEFAULT '未知';
+```
+> 对默认值的修改只影响今后对表的修改
+> 此外，还可以通过此种方式修改列的约束。
+
+---
+
+3. 重命名一个字段
+
+**使用 CHANGE old_column new_column dataType子句重命名列。语法格式如下：**
+
+```sql
+ALTER TABLE 表名 
+CHANGE 【column】 列名 新列名 新数据类型;
+```
+
+**示例**
+
+```sql
+ALTER TABLE myemp2
+CHANGE salary monthly_salary DOUBLE(10, 2);
+```
+
+---
+
+4. 删除一个字段
+
+**删除表中某个字段的语法格式如下：**
+
+```sql
+ALTER TABLE 表名 
+DROP 【COLUMN】字段名
+```
+
+**示例**
+
+```sql
+ALTER TABLE myemp2
+DROP email;
+```
+
+---
+
+### 重命名表
+
+- 方式一：使用RENAME
+
+```sql
+RENAME TABLE myemp2
+TO myemp3;
+```
+
+- 方式二：使用ALTER
+
+```sql
+ALTER TABLE myemp3
+RENAME TO myemp2;
+
+ALTER TABLE myemp3
+RENAME myemp2;
+```
+
+---
+
 ### 删除表
 
+- 在MySQL中，当一张数据表 没有与其他任何数据表形成关联关系 时，可以将当前数据表直接删除。
+- 数据和结构都被删除
+- 所有正在运行的相关事务被提交
+- 所有相关索引被删除
+- 语法格式：
+
+```sql
+DROP TABLE [IF EXISTS] 数据表1 [, 数据表2, …, 数据表n];
+```
+
+**IF EXISTS 的含义为：如果当前数据库中存在相应的数据表，则删除数据表；如果当前数据库中不存 在相应的数据表，则忽略删除语句，不再执行删除数据表的操作。**
+
+**示例**
+
+```sql
+DROP TABLE myemp1;
+```
+
+**DROP TABLE 语句不能回滚**
+
+---
+
 ### 清空表
+
+- TRUNCATE TABLE语句：
+  - 删除表中所有的数据
+  - 释放表的存储空间
+- 举例
+
+```sql
+TRUNCATE TABLE myemp2;
+```
+
+- TRUNCATE语句不能回滚，而使用 DELETE 语句删除数据，可以回滚
+> 阿里开发规范： 【参考】TRUNCATE TABLE 比 DELETE 速度快，且使用的系统和事务日志资源少，但 TRUNCATE 无 事务且不触发 TRIGGER，有可能造成事故，故不建议在开发代码中使用此语句。 说明：TRUNCATE TABLE 在功能上与不带 WHERE 子句的 DELETE 语句相同。
+
+---
 
 ### 内容拓展
 
