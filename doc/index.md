@@ -3,21 +3,25 @@
 layout: home
 
 hero:
-  name: "故里的个人博客"
-  tagline: 越努力，越幸运（有个全栈的梦想）😊
+  name: 个人博客
+  # text: 君子当以自强不息!
+  tagline: 有志者，事竟成!
   actions:
     - theme: brand
-      text: 学习中的技术...
+      text: 学习中...
       link: /backend/mysql
     - theme: alt
-      text: 需要深入学习的技术...
+      text: 待深入学习
       link: /frontend/javascript
 
 features:
-  - title: 24年总结
-    details: 学习了electron、nodejs、sequelize、mysql,了解了鸿蒙（感觉学习的都很零碎，希望25年可以来一个学习突破）
-  - title: 25年计划
-    details: 后端方面：学习python，用python + mysql + nginx + orm写一个简易的api服务，前端方面：学习工程化（webpack、vite）和原生js
-  - title: 刷题计划
-    details: 25年暂时没有刷题计划
+  - icon: ❌
+    title: 技术成长困境
+    details: 回首过去一年，涉猎了等众多前沿领域。但学习过程中面临诸多问题：学习计划常被外界干扰，导致进度受阻、知识遗忘、体系不连贯；理论与实践脱节，虽有理论储备却缺实战机会，且笔记杂乱，查找困难，学习效率低。
+  - icon: ⭕
+    title: 技术成长破局
+    details: 为各技术栈安排学习和实战时间，如 Next.js 安排 n 个月系统学习，每周至少学 n 小时，每掌握一模块安排 n 天实战，建 demo 项目加深理解。用 vitePress 按技术领域建目录，以 Markdown 记知识和代码示例，完成后部署到云服务器以便查阅。
+  - icon: ✈
+    title: 未来5年的展望
+    details: 深入学习 MySQL、Python 和 Django 搭建 RBAC 系统，优化 MySQL 查询，Python 实现核心逻辑，Django 建框架和权限模块。精研 webpack 与 JavaScript，掌握打包原理和配置，学 ES6 优化前端。学习 Linux 和 nginx，掌握命令和系统管理用于运维，利用 nginx 反向代理优化 RBAC 系统访问，拓展技术栈服务前端。
 ---
