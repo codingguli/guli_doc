@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: 学习中...
-      link: /backend/mysql
+      link: /backend/mysql/mysql
     - theme: alt
       text: 待深入学习
       link: /frontend/javascript
