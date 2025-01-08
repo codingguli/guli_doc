@@ -1,3 +1,5 @@
+import 'prismjs';
+import 'prismjs/components/prism-sql.js'; // 导入 SQL 语法支持
 import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
