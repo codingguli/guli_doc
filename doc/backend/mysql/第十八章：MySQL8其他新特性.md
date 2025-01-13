@@ -320,3 +320,71 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price);
 > 窗口函数的特点是可以分组，而且可以在分组内排序。另外，窗口函数不会因为分组而减少原表中的行 数，这对我们在原表数据的基础上进行统计和排序非常有用。
 
 ### 新特性二：公用表表达式
+
+#### 普通公用表表达式
+
+:::info 普通公用表表达式
+
+- 语法
+
+```sql
+WITH CTE名称
+AS （子查询）
+SELECT|DELETE|UPDATE 语句;
+```
+
+- 查询员工所在的部门的详细信息。
+
+```sql
+# 子查询
+SELECT *
+FROM departments
+WHERE department_id IN (
+                        SELECT department_id
+                        FROM employees
+);
+
+# 普通公用表表达式
+WITH emp_dept_id
+AS (SELECT DISTINCT department_id FROM employees)
+SELECT *
+FROM departments d JOIN emp_dept_id e
+ON d.department_id = e.department_id;
+```
+
+> 公用表表达式可以起到子查询的作用。以后如果遇到需要使用子查询的场景，你可以在查询 之前，先定义公用表表达式，然后在查询中用它来代替子查询。而且，跟子查询相比，公用表表达式有 一个优点，就是定义过公用表表达式之后的查询，可以像一个表一样多次引用公用表表达式，而子查询 则不能。
+
+:::
+
+#### 递归公用表表达式
+
+:::info 递归公用表表达式
+
+- 语法
+
+```sql
+WITH RECURSIVE
+CTE名称 AS （子查询）
+SELECT|DELETE|UPDATE 语句;
+```
+
+- 针对于我们常用的 employees 表，包含 employee_id，last_name 和 manager_id 三个字段。如果 a 是 b 的管理者，那么，我们可以把 b 叫做 a 的下属，如果同时 b 又是 c 的管理者，那么 c 就是 b 的下属，是 a 的下下 属。下面我们尝试用查询语句列出所有具有下下属身份的人员信息
+
+```sql
+WITH RECURSIVE cte
+AS
+(
+SELECT employee_id,last_name,manager_id,1 AS n FROM employees WHERE employee_id = 100
+-- 种子查询，找到第一代领导
+UNION ALL
+SELECT a.employee_id,a.last_name,a.manager_id,n+1 FROM employees AS a JOIN cte
+ON (a.manager_id = cte.employee_id) -- 递归查询，找出以递归公用表表达式的人为领导的人
+)
+SELECT employee_id,last_name FROM cte WHERE n >= 3;
+```
+
+:::
+
+#### 小结
+
+> 公用表表达式的作用是可以替代子查询，而且可以被多次引用。递归公用表表达式对查询有一个共同根 节点的树形结构数据非常高效，可以轻松搞定其他查询方式难以处理的查询。
