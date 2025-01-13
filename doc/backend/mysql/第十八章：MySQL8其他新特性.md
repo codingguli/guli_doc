@@ -242,7 +242,10 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price);
 - 查询 goods 数据表中后一个商品价格与当前商品价格的差值。
 
 ```sql
-
+SELECT LEAD(price, 1) OVER w "与后一个值比较",
+id, category_id, category, `name`, price, stock, upper_time
+FROM goods
+WINDOW w AS (PARTITION BY category_id ORDER BY price);
 ```
 
 :::
@@ -257,11 +260,25 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price);
 
 - 按照价格排序，查询第 1 个商品的价格信息。
 
+```sql
+SELECT FIRST_VALUE(price) OVER w "第一个商品",
+id, category_id, category, `name`, price, stock, upper_time
+FROM goods
+WINDOW w AS (PARTITION BY category_id ORDER BY price);
+```
+
 - LAST_VALUE(expr)函数
 
   > LAST_VALUE(expr)函数返回最后一个 expr 的值。
 
 - 按照价格排序，查询最后一个商品的价格信息。
+
+```sql
+SELECT LAST_VALUE(price) OVER w "最后一个商品",
+id, category_id, category, `name`, price, stock, upper_time
+FROM goods
+WINDOW w AS (PARTITION BY category_id ORDER BY price);
+```
 
 :::
 
@@ -275,11 +292,26 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price);
 
 - 查询 goods 数据表中排名第 2 和第 3 的价格信息。
 
+```sql
+SELECT NTH_VALUE(price, 2) OVER w '第二个产品价格',
+NTH_VALUE(price, 3) OVER w "第三个产品价格",
+id, category_id, category, `name`, price, stock, upper_time
+FROM goods
+WINDOW w AS (PARTITION BY category_id ORDER BY price);
+```
+
 - NTILE(n)函数
 
   > NTILE(n)函数将分区中的有序数据分为 n 个桶，记录桶编号。
 
 - 将 goods 表中的商品按照价格分为 3 组。
+
+```sql
+SELECT NTILE(3) OVER w "分组",
+id, category_id, category, `name`, price, stock, upper_time
+FROM goods
+WINDOW w AS (PARTITION BY category_id ORDER BY price);
+```
 
 :::
 
