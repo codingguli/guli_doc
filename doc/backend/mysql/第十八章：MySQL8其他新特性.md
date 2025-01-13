@@ -81,7 +81,7 @@ WINDOW w AS (PARTITION BY city)
 
 - 前置条件
 
-:::info
+:::info 前置条件
 
 - 创建表
 
@@ -120,7 +120,7 @@ VALUES
 
 - 序号函数
 
-:::info
+:::info 序号函数
 
 - ROW_NUMBER()函数
 
@@ -182,7 +182,7 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price);
 
 - 分布函数
 
-:::info
+:::info 分布函数
 
 - PERCENT_RANK()函数
 
@@ -220,7 +220,7 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price DESC);
 
 - 前后函数
 
-:::info
+:::info 前后函数
 
 - LAG(expr,n)函数
 
@@ -252,7 +252,7 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price);
 
 - 首尾函数
 
-:::info
+:::info 首尾函数
 
 - FIRST_VALUE(expr)函数
 
@@ -284,7 +284,7 @@ WINDOW w AS (PARTITION BY category_id ORDER BY price);
 
 - 其他函数
 
-:::info
+:::info 其他函数
 
 - NTH_VALUE(expr,n)函数
 
