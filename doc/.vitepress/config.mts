@@ -24,7 +24,7 @@ export default defineConfig({
         items: [
           { text: 'Nodejs', link: '/backend/node.md' },
           { text: 'Nestjs', link: '/backend/nest.md' },
-          { text: 'Python', link: '/backend/python.md' },
+          { text: 'Python', link: '/backend/python/python.md' },
           { text: 'Nginx', link: '/backend/nginx.md' },
           { text: 'Mysql', link: '/backend/mysql/mysql.md' },
         ],
