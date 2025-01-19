@@ -3,9 +3,8 @@
 layout: home
 
 hero:
-  name: 个人博客
-  # text: 君子当以自强不息!
-  tagline: 有志者，事竟成!
+  name: 学习笔记
+  tagline: 悟已往之不谏，知来者之可追。
   actions:
     - theme: brand
       text: 学习中...

@@ -4,12 +4,12 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "故里的个人博客",
+  title: "故里",
   description: "A VitePress Site",
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
-      { 
+      {
         text: '前端',
         items: [
           { text: 'Html', link: '/frontend/html.md' },
@@ -19,7 +19,7 @@ export default defineConfig({
           { text: 'React', link: '/frontend/react.md' },
         ]
       },
-      { 
+      {
         text: '后端',
         items: [
           { text: 'Nodejs', link: '/backend/node.md' },
@@ -27,6 +27,7 @@ export default defineConfig({
           { text: 'Python', link: '/backend/python/python.md' },
           { text: 'Nginx', link: '/backend/nginx.md' },
           { text: 'Mysql', link: '/backend/mysql/mysql.md' },
+          { text: 'django', link: '/backend/django/django.md' },
         ],
       },
       {
