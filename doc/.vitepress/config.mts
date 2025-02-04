@@ -17,7 +17,8 @@ export default defineConfig({
           { text: 'Javascript', link: '/frontend/javascript.md' },
           { text: 'Vue', link: '/frontend/vue.md' },
           { text: 'React', link: '/frontend/react.md' },
-          { text: '前端原理', link: '/frontend/principle/principle.md' }
+          { text: '前端原理', link: '/frontend/principle/principle.md' },
+          { text: '前端面试题', link: '/frontend/interviewQuestions/interviewQuestions.md' }
         ]
       },
       {

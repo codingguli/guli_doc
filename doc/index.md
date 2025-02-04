@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: 学习中...
-      link: /frontend/principle/principle
+      link: /frontend/RAG/RAG
     - theme: alt
       text: 待深入学习
       link: /frontend/javascript
