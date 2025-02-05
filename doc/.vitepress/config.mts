@@ -29,7 +29,8 @@ export default defineConfig({
           { text: 'Python', link: '/backend/python/python.md' },
           { text: 'Nginx', link: '/backend/nginx.md' },
           { text: 'Mysql', link: '/backend/mysql/mysql.md' },
-          { text: 'django', link: '/backend/django/django.md' },
+          { text: 'Django', link: '/backend/django/django.md' },
+          { text: 'Flask', link: '/backend/flask/flask.md' },
         ],
       },
       {
