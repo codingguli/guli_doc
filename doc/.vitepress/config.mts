@@ -31,6 +31,7 @@ export default defineConfig({
           { text: 'Mysql', link: '/backend/mysql/mysql.md' },
           { text: 'Django', link: '/backend/django/django.md' },
           { text: 'Flask', link: '/backend/flask/flask.md' },
+          { text: 'AI大模型', link: '/backend/RAG/RAG.md' },
         ],
       },
       {
