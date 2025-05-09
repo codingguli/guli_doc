@@ -8,10 +8,10 @@ hero:
   actions:
     - theme: brand
       text: 学习中...
-      link: /backend/RAG/RAG
+      link: /frontend/principle/principle
     - theme: alt
       text: 待深入学习
-      link: /frontend/javascript
+      link: /backend/python/python
 
 features:
   - icon: ❌
